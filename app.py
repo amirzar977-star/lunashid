@@ -823,6 +823,12 @@ def admin_dashboard():
 
     conn.close()
 
+    stats = {
+        "products": product_count,
+        "users": user_count,
+        "orders": order_count,
+        "messages": unread_count
+    }
     return render_template(
         "admin/dashboard.html",
         product_count=product_count,
@@ -2294,6 +2300,7 @@ if __name__ == "__main__":
         port=5002,
         debug=True
     )
+
 
 
 
