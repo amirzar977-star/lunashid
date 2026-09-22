@@ -5,10 +5,11 @@ import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "lunashid-secret-key")
+app.secret_key = os.environ.get("SECRET_KEY", "lunashid-secret-key-change-this")
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SECURE"] = False
+app.config["PERMANENT_SESSION_LIFETIME"] = 86400
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "lunashid.db")
@@ -759,6 +760,7 @@ def admin_login():
             and password == "admin123"
         ):
 
+            session.permanent = True
             session["admin"] = True
 
             return redirect(
@@ -2292,6 +2294,7 @@ if __name__ == "__main__":
         port=5002,
         debug=True
     )
+
 
 
 
