@@ -1,14 +1,9 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿/*
+   LUNASHID GLASS BACKGROUND
+   Background is controlled by the server.
+   No localStorage background override.
+*/
 
-    const layer = document.getElementById("backgroundLayer");
-
-    if (!layer) return;
-
-    const saved = localStorage.getItem("lunashidBackground");
-
-    if (saved) {
-        layer.style.backgroundImage = `url("${saved}")`;
-        layer.style.opacity = "1";
-    }
-
+document.addEventListener("DOMContentLoaded", () => {
+    document.documentElement.classList.add("glass-background-ready");
 });
