@@ -1,106 +1,204 @@
 ﻿{% extends "base.html" %}
 
+{% block title %}{{ site.site_name or "Lunashid" }}{% endblock %}
+
 {% block content %}
 
 <style>
-    .background{
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
+.hero-section{
+    position:relative;
+    min-height:620px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:32px;
+    margin:25px auto 60px;
+    max-width:1400px;
+}
+
+.hero-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.30),
+            rgba(247,243,234,.12)
+        );
+    z-index:1;
+    pointer-events:none;
+}
+
+.hero-image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    z-index:0;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    width:min(850px,90%);
+    padding:55px;
+    text-align:center;
+}
+
+.hero-glass{
+    padding:50px 45px;
+    border-radius:30px;
+    background:rgba(255,255,255,.42);
+    border:1px solid rgba(255,255,255,.65);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:
+        0 25px 70px rgba(80,100,80,.14),
+        inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.hero-content h1{
+    margin:0 0 18px;
+    font-size:clamp(2rem,5vw,4.4rem);
+    font-weight:800;
+    color:#26352c;
+}
+
+.hero-content p{
+    margin:0 auto 28px;
+    max-width:650px;
+    font-size:1.1rem;
+    line-height:2;
+    color:#405048;
+}
+
+.hero-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 30px;
+    border-radius:16px;
+    text-decoration:none;
+    color:#fff;
+    background:#91b79d;
+    box-shadow:0 10px 25px rgba(80,120,90,.18);
+    transition:.25s;
+}
+
+.hero-button:hover{
+    transform:translateY(-3px);
+}
+
+.products-intro{
+    max-width:1400px;
+    margin:0 auto 35px;
+    padding:0 25px;
+    text-align:right;
+}
+
+.products-intro h2{
+    margin:0 0 10px;
+    color:#26352c;
+}
+
+.products-intro p{
+    margin:0;
+    color:#66736b;
+}
+
+@media(max-width:700px){
+    .hero-section{
+        min-height:500px;
+        border-radius:22px;
+        margin:15px auto 40px;
     }
 
-    {% if site.background %}
-    .background{
-        background-image:
-            linear-gradient(
-                rgba(247,243,234,.18),
-                rgba(247,243,234,.18)
-            ),
-            url("{{ url_for('static', filename='uploads/backgrounds/' ~ site.background) }}");
+    .hero-content{
+        padding:25px;
     }
-    {% endif %}
+
+    .hero-glass{
+        padding:30px 20px;
+        border-radius:22px;
+    }
+}
 </style>
 
-<section class="hero glass">
+<section class="hero-section">
+
+    {% if site.hero_image %}
+        <img
+            class="hero-image"
+            src="{{ url_for('static', filename='uploads/hero/' ~ site.hero_image) }}"
+            alt="{{ site.hero_title or 'Lunashid' }}"
+            onerror="this.style.display='none';"
+        >
+    {% endif %}
 
     <div class="hero-content">
-        <span class="eyebrow">LUNASHID · CERAMIC STUDIO</span>
+        <div class="hero-glass">
 
-        <h1>{{ site.hero_title }}</h1>
+            <h1>
+                {{ site.hero_title or site.site_name or "Lunashid" }}
+            </h1>
 
-        <p>{{ site.hero_text }}</p>
+            <p>
+                {{ site.hero_text or site.site_description or "قطعاتی برای زندگی روزمره، با روحی متفاوت." }}
+            </p>
 
-        <div class="actions">
-            <a class="button primary" href="{{ url_for('products') }}">
+            <a href="{{ url_for('products') }}" class="hero-button">
                 مشاهده مجموعه
             </a>
 
-            <a class="button" href="{{ url_for('about') }}">
-                داستان لوناشید
-            </a>
         </div>
-    </div>
-
-    <div class="hero-image">
-        {% if site.hero_image %}
-        <img src="{{ url_for('static',filename='uploads/hero/' ~ site.hero_image) }}" alt="Lunashid">
-        {% else %}
-        <div class="placeholder-pot">
-            <div></div>
-        </div>
-        {% endif %}
     </div>
 
 </section>
 
-<section class="collection">
+<section class="products-intro">
+    <h2>مجموعه محصولات</h2>
+    <p>
+        قطعاتی برای زندگی روزمره، با روحی متفاوت
+    </p>
+</section>
 
-    <div class="section-heading">
-        <span>CURATED COLLECTION</span>
+{% if products %}
+<section class="products-grid">
+    {% for product in products %}
+        <a href="{{ url_for('product_detail', product_id=product.id) }}"
+           class="product-card">
 
-        <h2>مجموعه محصولات</h2>
+            {% if product.image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                    alt="{{ product.name }}"
+                >
+            {% else %}
+                <img
+                    src="{{ url_for('static', filename='uploads/products/no-image.svg') }}"
+                    alt="{{ product.name }}"
+                >
+            {% endif %}
 
-        <p>
-            قطعاتی برای زندگی روزمره، با روحی متفاوت.
-            هر محصول داستان خودش را دارد.
-        </p>
-    </div>
+            <div class="product-card-content">
+                <h3>{{ product.name }}</h3>
 
-    <div class="product-grid">
-
-        {% for product in products[:6] %}
-
-        <a class="product-card glass"
-           href="{{ url_for('product',id=product.id) }}">
-
-            <div class="product-image">
-
-                {% if product.image %}
-                <img src="{{ url_for('static',filename='uploads/products/' ~ product.image) }}" alt="{{ product.name }}">
-                {% else %}
-                <div class="product-placeholder"></div>
+                {% if product.description %}
+                    <p>{{ product.description }}</p>
                 {% endif %}
 
-            </div>
-
-            <div class="product-info">
-                <h3>{{ product.name }}</h3>
-                <span>{{ product.price }} تومان</span>
+                {% if product.price %}
+                    <strong>{{ "{:,.0f}".format(product.price) }} تومان</strong>
+                {% endif %}
             </div>
 
         </a>
-
-        {% else %}
-
-        <div class="empty glass">
-            هنوز محصولی اضافه نشده است.
-        </div>
-
-        {% endfor %}
-
-    </div>
-
+    {% endfor %}
 </section>
+{% endif %}
 
 {% endblock %}
