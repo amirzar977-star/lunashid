@@ -5,7 +5,10 @@ import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = "lunashid-secret-key"
+app.secret_key = os.environ.get("SECRET_KEY", "lunashid-secret-key")
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = True
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "lunashid.db")
@@ -167,7 +170,7 @@ def delete_upload(folder, filename):
 
 
 def admin_required():
-    return session.get("admin") is True
+    return session.get("admin", False) == True
 
 
 # =========================================================
@@ -2289,6 +2292,7 @@ if __name__ == "__main__":
         port=5002,
         debug=True
     )
+
 
 
 
