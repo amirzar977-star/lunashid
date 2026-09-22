@@ -4,18 +4,22 @@
 
 <style>
     .background{
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    {% if site.background %}
+    .background{
         background-image:
             linear-gradient(
                 rgba(247,243,234,.18),
                 rgba(247,243,234,.18)
             ),
             url("{{ url_for('static', filename='uploads/backgrounds/' ~ site.background) }}");
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
     }
+    {% endif %}
 </style>
 
 <section class="hero glass">
@@ -40,7 +44,7 @@
 
     <div class="hero-image">
         {% if site.hero_image %}
-        <img src="{{ url_for('static',filename='uploads/hero/' ~ site.hero_image) }}">
+        <img src="{{ url_for('static',filename='uploads/hero/' ~ site.hero_image) }}" alt="Lunashid">
         {% else %}
         <div class="placeholder-pot">
             <div></div>
@@ -73,7 +77,7 @@
             <div class="product-image">
 
                 {% if product.image %}
-                <img src="{{ url_for('static',filename='uploads/products/' ~ product.image) }}">
+                <img src="{{ url_for('static',filename='uploads/products/' ~ product.image) }}" alt="{{ product.name }}">
                 {% else %}
                 <div class="product-placeholder"></div>
                 {% endif %}
@@ -100,11 +104,3 @@
 </section>
 
 {% endblock %}
-
-
-
-
-
-
-
-
