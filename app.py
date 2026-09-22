@@ -831,6 +831,7 @@ def admin_dashboard():
     }
     return render_template(
         "admin/dashboard.html",
+        stats=stats,
         product_count=product_count,
         user_count=user_count,
         order_count=order_count,
@@ -2300,6 +2301,7 @@ if __name__ == "__main__":
         port=5002,
         debug=True
     )
+
 
 
 
