@@ -1,0 +1,236 @@
+﻿{% extends "admin/base.html" %}
+
+{% block title %}مدیریت محصولات{% endblock %}
+
+{% block content %}
+
+<style>
+
+.products-page{
+    direction:rtl;
+}
+
+.products-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.products-top h1{
+    margin:0;
+    font-size:32px;
+}
+
+.products-top p{
+    color:#888;
+}
+
+.add-product{
+    background:#A91D3A;
+    color:white;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:15px;
+}
+
+.products-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:20px;
+}
+
+.product-card{
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(14px);
+    border-radius:25px;
+    overflow:hidden;
+}
+
+.product-image{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+    display:block;
+}
+
+.no-image{
+    height:230px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#999;
+    background:rgba(0,0,0,.03);
+}
+
+.product-body{
+    padding:20px;
+}
+
+.product-body h3{
+    margin:0 0 8px;
+}
+
+.product-description{
+    color:#888;
+    font-size:13px;
+    line-height:1.8;
+    min-height:45px;
+}
+
+.product-price{
+    margin-top:15px;
+    color:#A91D3A;
+    font-size:19px;
+    font-weight:900;
+}
+
+.product-stock{
+    margin-top:8px;
+    font-size:13px;
+    color:#777;
+}
+
+.product-actions{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+}
+
+.product-actions a,
+.product-actions button{
+    flex:1;
+    border:0;
+    text-align:center;
+    padding:11px;
+    border-radius:12px;
+    font-family:inherit;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.edit{
+    background:rgba(120,170,120,.15);
+    color:#476847;
+}
+
+.delete{
+    background:rgba(169,29,58,.1);
+    color:#A91D3A;
+}
+
+</style>
+
+<div class="products-page">
+
+    <div class="products-top">
+
+        <div>
+            <h1>محصولات</h1>
+            <p>مدیریت مجموعه سفال‌های لوناشید</p>
+        </div>
+
+        <a
+            href="{{ url_for('admin_add_product') }}"
+            class="add-product"
+        >
+            + افزودن محصول
+        </a>
+
+    </div>
+
+    <div class="products-grid">
+
+        {% for product in products %}
+
+        <article class="product-card">
+
+            {% if product.image %}
+
+            <img
+                class="product-image"
+                src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                alt="{{ product.name }}"
+            >
+
+            {% else %}
+
+            <div class="no-image">
+                بدون تصویر
+            </div>
+
+            {% endif %}
+
+            <div class="product-body">
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+                <div class="product-description">
+                    {{ product.description or 'بدون توضیحات' }}
+                </div>
+
+                <div class="product-price">
+                    {{ "{:,}".format(product.price or 0) }}
+                    تومان
+                </div>
+
+                <div class="product-stock">
+                    موجودی:
+                    {{ product.stock or 0 }}
+                </div>
+
+                <div class="product-actions">
+
+                    <a
+                        class="edit"
+                        href="{{ url_for('admin_add_product') }}?edit={{ product.id }}"
+                    >
+                        ویرایش
+                    </a>
+
+                    <a
+                        class="edit"
+                        href="{{ url_for('admin_product_gallery', product_id=product.id) }}"
+                    >
+                        گالری
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('admin_delete_product', product_id=product.id) }}"
+                        onsubmit="return confirm('این محصول حذف شود؟');"
+                    >
+
+                        <button
+                            class="delete"
+                            type="submit"
+                        >
+                            حذف
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div style="padding:50px;text-align:center;color:#888;">
+            هنوز محصولی ثبت نشده است.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+

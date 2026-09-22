@@ -1,0 +1,166 @@
+﻿{% extends "admin/base.html" %}
+
+{% block title %}
+{% if product %}ویرایش محصول{% else %}محصول جدید{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-heading">
+
+    <div>
+
+        <span class="section-kicker">
+            محصولات
+        </span>
+
+        <h1>
+            {% if product %}
+                ویرایش محصول
+            {% else %}
+                افزودن محصول
+            {% endif %}
+        </h1>
+
+    </div>
+
+</div>
+
+
+<form method="POST"
+      enctype="multipart/form-data"
+      class="admin-form">
+
+    <div class="form-section">
+
+        <label>
+            نام محصول
+        </label>
+
+        <input
+            name="name"
+            value="{{ product.name if product else '' }}"
+            required>
+
+
+        <label>
+            قیمت
+        </label>
+
+        <input
+            name="price"
+            type="number"
+            value="{{ product.price if product else 0 }}"
+            required>
+
+
+        <label>
+            دسته‌بندی
+        </label>
+
+        <input
+            name="category"
+            value="{{ product.category if product else 'سفال' }}">
+
+
+        <label>
+            موجودی
+        </label>
+
+        <input
+            name="stock"
+            type="number"
+            value="{{ product.stock if product else 0 }}">
+
+
+        <label>
+            توضیحات
+        </label>
+
+        <textarea
+            name="description"
+            rows="7">{{ product.description if product else '' }}</textarea>
+
+
+        <label class="check-row">
+
+            <input
+                type="checkbox"
+                name="featured"
+                {% if product and product.featured %}
+                checked
+                {% endif %}>
+
+            نمایش در محصولات منتخب
+
+        </label>
+
+
+        <label>
+            تصاویر محصول
+        </label>
+
+        <input
+            type="file"
+            name="images"
+            multiple
+            accept="image/*">
+
+
+        <button class="admin-primary"
+                type="submit">
+
+            {% if product %}
+                ذخیره تغییرات
+            {% else %}
+                ساخت محصول
+            {% endif %}
+
+        </button>
+
+    </div>
+
+
+    {% if images %}
+
+    <div class="form-section">
+
+        <h3>
+            تصاویر فعلی
+        </h3>
+
+        <div class="admin-image-grid">
+
+            {% for image in images %}
+
+            <div>
+
+                <img src="{{ url_for(
+                    'static',
+                    filename='uploads/products/' ~ image.filename
+                ) }}">
+
+                <a
+                    class="delete-action"
+                    href="{{ url_for(
+                        'admin_delete_image',
+                        image_id=image.id
+                    ) }}">
+                    حذف تصویر
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</form>
+
+{% endblock %}
+
+

@@ -1,0 +1,1506 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | {{ site.site_name }}
+{% set gallery = product_gallery(product.id) %}
+
+{% if gallery %}
+
+<section class="product-gallery-pro">
+
+<style>
+
+.product-gallery-pro{
+    margin-top:45px;
+    direction:rtl;
+}
+
+.product-gallery-pro h2{
+    margin-bottom:20px;
+}
+
+.gallery-layout{
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:20px;
+    align-items:start;
+}
+
+.gallery-thumbs{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.gallery-thumb{
+    width:80px;
+    height:80px;
+    border-radius:15px;
+    overflow:hidden;
+    border:2px solid transparent;
+    cursor:pointer;
+    background:rgba(255,255,255,.2);
+}
+
+.gallery-thumb:hover{
+    border-color:#A91D3A;
+}
+
+.gallery-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.gallery-main{
+    border-radius:28px;
+    overflow:hidden;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.3);
+}
+
+.gallery-main img{
+    width:100%;
+    max-height:620px;
+    object-fit:contain;
+    display:block;
+    cursor:zoom-in;
+}
+
+.gallery-modal{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.78);
+    padding:30px;
+}
+
+.gallery-modal.open{
+    display:flex;
+}
+
+.gallery-modal img{
+    max-width:95vw;
+    max-height:90vh;
+    object-fit:contain;
+    border-radius:20px;
+}
+
+.gallery-close{
+    position:absolute;
+    top:25px;
+    right:30px;
+    color:white;
+    font-size:32px;
+    cursor:pointer;
+}
+
+@media(max-width:700px){
+
+    .gallery-layout{
+        grid-template-columns:1fr;
+    }
+
+    .gallery-thumbs{
+        order:2;
+        flex-direction:row;
+        overflow-x:auto;
+    }
+
+    .gallery-main{
+        order:1;
+    }
+
+}
+
+</style>
+
+
+<div class="gallery-count" style="color:#777;font-size:12px;margin-top:7px;">{{ product_gallery|length }} تصویر</div><h2>
+    گالری محصول
+</h2>
+
+
+<div class="gallery-layout">
+
+    <div class="gallery-thumbs">
+
+        {% if product.image %}
+
+        <div
+            class="gallery-thumb"
+            onclick="changeProductImage(
+                '{{ url_for(
+                    'static',
+                    filename='uploads/products/' ~ product.image
+                ) }}'
+            )"
+        >
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/products/' ~ product.image
+                ) }}"
+            >
+
+        </div>
+
+        {% endif %}
+
+
+        {% for image in gallery %}
+
+        <div
+            class="gallery-thumb"
+            onclick="changeProductImage(
+                '{{ url_for(
+                    'static',
+                    filename='uploads/products/gallery/' ~ image.filename
+                ) }}'
+            )"
+        >
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/products/gallery/' ~ image.filename
+                ) }}"
+            >
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="gallery-main">
+
+        <img
+            id="mainProductGalleryImage"
+            src="{% if product.image %}{{ url_for(
+                'static',
+                filename='uploads/products/' ~ product.image
+            ) }}{% else %}{{ url_for(
+                'static',
+                filename='uploads/products/gallery/' ~ gallery[0].filename
+            ) }}{% endif %}"
+            onclick="openProductGallery()"
+            alt="{{ product.name }}"
+        >
+
+    </div>
+
+</div>
+
+
+<div
+    class="gallery-modal"
+    id="productGalleryModal"
+    onclick="closeProductGallery()"
+>
+
+    <span class="gallery-close">
+        ×
+    </span>
+
+    <img
+        id="galleryModalImage"
+        src=""
+        onclick="event.stopPropagation()"
+    >
+
+</div>
+
+
+<script>
+
+function changeProductImage(src){
+
+    const main =
+        document.getElementById(
+            "mainProductGalleryImage"
+        );
+
+    main.src = src;
+}
+
+
+function openProductGallery(){
+
+    const main =
+        document.getElementById(
+            "mainProductGalleryImage"
+        );
+
+    const modal =
+        document.getElementById(
+            "productGalleryModal"
+        );
+
+    const modalImage =
+        document.getElementById(
+            "galleryModalImage"
+        );
+
+    modalImage.src = main.src;
+
+    modal.classList.add("open");
+}
+
+
+function closeProductGallery(){
+
+    document
+        .getElementById(
+            "productGalleryModal"
+        )
+        .classList.remove("open");
+}
+
+</script>
+
+</section>
+
+{% endif %}
+
+
+<style>
+
+.product-gallery{
+    margin-top:45px;
+    direction:rtl;
+}
+
+.product-gallery-title{
+    margin-bottom:20px;
+}
+
+.product-gallery-title span{
+    display:block;
+    color:#A91D3A;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-bottom:7px;
+}
+
+.product-gallery-title h2{
+    margin:0;
+    font-size:28px;
+}
+
+.product-gallery-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fill,minmax(150px,1fr));
+
+    gap:16px;
+}
+
+.product-gallery-card{
+    position:relative;
+    overflow:hidden;
+
+    aspect-ratio:1;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.13);
+
+    border:
+        1px solid
+        rgba(255,255,255,.38);
+
+    backdrop-filter:
+        blur(14px)
+        saturate(150%);
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.product-gallery-card:hover{
+    transform:translateY(-5px);
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.10);
+}
+
+.product-gallery-card img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:
+        transform .45s ease;
+}
+
+.product-gallery-card:hover img{
+    transform:scale(1.06);
+}
+
+
+/* IMAGE VIEWER */
+
+.gallery-viewer{
+    position:fixed;
+
+    inset:0;
+
+    z-index:10020;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:30px;
+
+    background:
+        rgba(15,20,15,.32);
+
+    backdrop-filter:
+        blur(18px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+.gallery-viewer.open{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.gallery-viewer img{
+    max-width:min(1000px,92vw);
+    max-height:88vh;
+
+    object-fit:contain;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.28);
+
+    transform:scale(.94);
+
+    transition:.35s;
+}
+
+.gallery-viewer.open img{
+    transform:scale(1);
+}
+
+.gallery-viewer-close{
+    position:absolute;
+
+    top:25px;
+    right:25px;
+
+    width:48px;
+    height:48px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.3);
+
+    backdrop-filter:blur(12px);
+
+    font-size:26px;
+
+    cursor:pointer;
+}
+
+@media(max-width:600px){
+
+    .product-gallery-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .product-gallery{
+        margin-top:30px;
+    }
+
+}
+
+</style>
+
+
+<!-- PRODUCT GALLERY FINAL -->
+
+<section class="product-gallery product-gallery-final">
+
+    <div class="product-gallery-title">
+
+        <span>
+            PRODUCT GALLERY
+        </span>
+
+        <div class="gallery-count" style="color:#777;font-size:12px;margin-top:7px;">{{ product_gallery|length }} تصویر</div><h2>
+            تصاویر بیشتر محصول
+        </h2>
+
+    </div>
+
+
+    {% if product_gallery and product_gallery|length > 0 %}
+
+        <div class="product-gallery-grid">
+
+            {% for image in product_gallery %}
+
+                <div
+                    class="product-gallery-card"
+                    onclick="openGalleryImage(
+                        '{{ url_for(
+                            'static',
+                            filename='uploads/products/gallery/' ~ image.filename
+                        ) }}'
+                    )"
+                >
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/products/gallery/' ~ image.filename
+                        ) }}"
+                        alt="{{ product.name }}"
+                        loading="lazy"
+                    >
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div
+            style="
+                padding:35px;
+                text-align:center;
+                border-radius:24px;
+                background:rgba(255,255,255,.12);
+                border:1px solid rgba(255,255,255,.28);
+                color:#888;
+            "
+        >
+            تصاویر بیشتری برای این محصول ثبت نشده است.
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- GALLERY VIEWER -->
+
+<div
+    id="galleryViewer"
+    class="gallery-viewer"
+    onclick="closeGalleryImage(event)"
+>
+
+    <button
+        type="button"
+        class="gallery-viewer-close"
+        onclick="closeGalleryImage()"
+    >
+        ×
+    </button>
+
+    <img
+        id="galleryViewerImage"
+        src=""
+        alt=""
+    >
+
+</div>
+
+
+<script>
+
+function openGalleryImage(src){
+
+    const viewer =
+        document.getElementById(
+            "galleryViewer"
+        );
+
+    const image =
+        document.getElementById(
+            "galleryViewerImage"
+        );
+
+    image.src = src;
+
+    viewer.classList.add("open");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeGalleryImage(event){
+
+    if(
+        event &&
+        event.target &&
+        event.target.id === "galleryViewerImage"
+    ){
+        return;
+    }
+
+    const viewer =
+        document.getElementById(
+            "galleryViewer"
+        );
+
+    viewer.classList.remove("open");
+
+    document.body.style.overflow = "";
+}
+
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeGalleryImage();
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+.product-detail{
+    max-width:1200px;
+    margin:70px auto;
+    padding:25px;
+}
+
+.product-detail-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:55px;
+    align-items:center;
+}
+
+.product-photo{
+    min-height:520px;
+    border-radius:35px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(10px) saturate(160%);
+    box-shadow:0 30px 80px rgba(0,0,0,.08);
+}
+
+.product-photo img{
+    width:100%;
+    height:520px;
+    object-fit:cover;
+    display:block;
+}
+
+.product-placeholder{
+    height:520px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#777;
+}
+
+.product-info{
+    direction:rtl;
+    text-align:right;
+}
+
+.product-category{
+    display:inline-block;
+    padding:8px 15px;
+    border-radius:999px;
+    background:rgba(169,29,58,.08);
+    color:#A91D3A;
+    margin-bottom:18px;
+}
+
+.product-info h1{
+    font-size:46px;
+    margin:0 0 20px;
+}
+
+.product-description{
+    color:#666;
+    line-height:2.2;
+    font-size:17px;
+}
+
+.product-price{
+    font-size:30px;
+    font-weight:800;
+    margin:30px 0;
+    color:#A91D3A;
+}
+
+.quantity-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+    direction:rtl;
+}
+
+.quantity-box input{
+    width:80px;
+    padding:15px;
+    text-align:center;
+    border-radius:15px;
+    border:1px solid rgba(0,0,0,.1);
+    background:rgba(255,255,255,.4);
+}
+
+.add-cart{
+    width:100%;
+    border:0;
+    padding:18px;
+    border-radius:18px;
+    background:#A91D3A;
+    color:white;
+    font-family:inherit;
+    font-size:17px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.add-cart:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 35px rgba(169,29,58,.2);
+}
+
+.back-shop{
+    display:inline-block;
+    margin-top:18px;
+    color:#555;
+    text-decoration:none;
+}
+
+.related{
+    margin-top:100px;
+    direction:rtl;
+}
+
+.related h2{
+    margin-bottom:25px;
+}
+
+.related-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.related-card{
+    text-decoration:none;
+    color:inherit;
+    border-radius:25px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(10px);
+}
+
+.related-card img{
+    width:100%;
+    height:210px;
+    object-fit:cover;
+}
+
+.related-card-info{
+    padding:15px;
+}
+
+.related-card-info strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+@media(max-width:800px){
+    .product-detail-grid{
+        grid-template-columns:1fr;
+        gap:30px;
+    }
+
+    .product-info h1{
+        font-size:34px;
+    }
+
+    .product-photo,
+    .product-photo img{
+        min-height:350px;
+        height:350px;
+    }
+
+    .related-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+</style>
+
+<section class="product-detail">
+
+    <div class="product-detail-grid">
+
+        <div class="product-photo">
+
+            {% if product.image %}
+
+            <img
+                src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                alt="{{ product.name }}"
+            >
+
+            {% else %}
+
+            <div class="product-placeholder">
+                تصویر محصول
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="product-info">
+
+            {% if product.category %}
+            <span class="product-category">
+                {{ product.category }}
+            </span>
+            {% endif %}
+
+            <h1>{{ product.name }}</h1>
+
+            <div class="product-description">
+                {{ product.description }}
+            </div>
+
+            <div class="product-price">
+                {{ "{:,}".format(product.price) }} تومان
+            </div>
+
+            <form
+                
+                
+             onsubmit="event.preventDefault(); addToMiniCart({{ product.id }});">
+
+                <div class="quantity-box">
+
+                    <label>تعداد</label>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        max="99"
+                    >
+
+                </div>
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ url_for('cart') }}"
+                >
+
+                <button class="add-cart" type="submit" type="button" onclick="addToMiniCart({{ product.id }});">افزودن به سبد</button>
+
+            </form>
+
+            <a class="back-shop" href="{{ url_for('products') }}">
+                ← بازگشت به مجموعه محصولات
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if related %}
+
+    <section class="related">
+
+        <div class="gallery-count" style="color:#777;font-size:12px;margin-top:7px;">{{ product_gallery|length }} تصویر</div><h2>محصولات مشابه</h2>
+
+        <div class="related-grid">
+
+            {% for item in related %}
+
+            <a
+                class="related-card"
+                href="{{ url_for('product', product_id=item.id) }}"
+            >
+
+                {% if item.image %}
+
+                <img
+                    src="{{ url_for('static', filename='uploads/products/' ~ item.image) }}"
+                    alt="{{ item.name }}"
+                >
+
+                {% endif %}
+
+                <div class="related-card-info">
+
+                    <strong>{{ item.name }}</strong>
+
+                    <span>
+                        {{ "{:,}".format(item.price) }} تومان
+                    </span>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</section>
+
+
+{% set gallery = product_gallery(product.id) %}
+
+{% if gallery %}
+
+<section class="product-gallery-pro">
+
+<style>
+
+.product-gallery-pro{
+    margin-top:45px;
+    direction:rtl;
+}
+
+.product-gallery-pro h2{
+    margin-bottom:20px;
+}
+
+.gallery-layout{
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:20px;
+    align-items:start;
+}
+
+.gallery-thumbs{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.gallery-thumb{
+    width:80px;
+    height:80px;
+    border-radius:15px;
+    overflow:hidden;
+    border:2px solid transparent;
+    cursor:pointer;
+    background:rgba(255,255,255,.2);
+}
+
+.gallery-thumb:hover{
+    border-color:#A91D3A;
+}
+
+.gallery-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.gallery-main{
+    border-radius:28px;
+    overflow:hidden;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.3);
+}
+
+.gallery-main img{
+    width:100%;
+    max-height:620px;
+    object-fit:contain;
+    display:block;
+    cursor:zoom-in;
+}
+
+.gallery-modal{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.78);
+    padding:30px;
+}
+
+.gallery-modal.open{
+    display:flex;
+}
+
+.gallery-modal img{
+    max-width:95vw;
+    max-height:90vh;
+    object-fit:contain;
+    border-radius:20px;
+}
+
+.gallery-close{
+    position:absolute;
+    top:25px;
+    right:30px;
+    color:white;
+    font-size:32px;
+    cursor:pointer;
+}
+
+@media(max-width:700px){
+
+    .gallery-layout{
+        grid-template-columns:1fr;
+    }
+
+    .gallery-thumbs{
+        order:2;
+        flex-direction:row;
+        overflow-x:auto;
+    }
+
+    .gallery-main{
+        order:1;
+    }
+
+}
+
+</style>
+
+
+<div class="gallery-count" style="color:#777;font-size:12px;margin-top:7px;">{{ product_gallery|length }} تصویر</div><h2>
+    گالری محصول
+</h2>
+
+
+<div class="gallery-layout">
+
+    <div class="gallery-thumbs">
+
+        {% if product.image %}
+
+        <div
+            class="gallery-thumb"
+            onclick="changeProductImage(
+                '{{ url_for(
+                    'static',
+                    filename='uploads/products/' ~ product.image
+                ) }}'
+            )"
+        >
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/products/' ~ product.image
+                ) }}"
+            >
+
+        </div>
+
+        {% endif %}
+
+
+        {% for image in gallery %}
+
+        <div
+            class="gallery-thumb"
+            onclick="changeProductImage(
+                '{{ url_for(
+                    'static',
+                    filename='uploads/products/gallery/' ~ image.filename
+                ) }}'
+            )"
+        >
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/products/gallery/' ~ image.filename
+                ) }}"
+            >
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="gallery-main">
+
+        <img
+            id="mainProductGalleryImage"
+            src="{% if product.image %}{{ url_for(
+                'static',
+                filename='uploads/products/' ~ product.image
+            ) }}{% else %}{{ url_for(
+                'static',
+                filename='uploads/products/gallery/' ~ gallery[0].filename
+            ) }}{% endif %}"
+            onclick="openProductGallery()"
+            alt="{{ product.name }}"
+        >
+
+    </div>
+
+</div>
+
+
+<div
+    class="gallery-modal"
+    id="productGalleryModal"
+    onclick="closeProductGallery()"
+>
+
+    <span class="gallery-close">
+        ×
+    </span>
+
+    <img
+        id="galleryModalImage"
+        src=""
+        onclick="event.stopPropagation()"
+    >
+
+</div>
+
+
+<script>
+
+function changeProductImage(src){
+
+    const main =
+        document.getElementById(
+            "mainProductGalleryImage"
+        );
+
+    main.src = src;
+}
+
+
+function openProductGallery(){
+
+    const main =
+        document.getElementById(
+            "mainProductGalleryImage"
+        );
+
+    const modal =
+        document.getElementById(
+            "productGalleryModal"
+        );
+
+    const modalImage =
+        document.getElementById(
+            "galleryModalImage"
+        );
+
+    modalImage.src = main.src;
+
+    modal.classList.add("open");
+}
+
+
+function closeProductGallery(){
+
+    document
+        .getElementById(
+            "productGalleryModal"
+        )
+        .classList.remove("open");
+}
+
+</script>
+
+</section>
+
+{% endif %}
+
+
+<style>
+
+.product-gallery{
+    margin-top:45px;
+    direction:rtl;
+}
+
+.product-gallery-title{
+    margin-bottom:20px;
+}
+
+.product-gallery-title span{
+    display:block;
+    color:#A91D3A;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-bottom:7px;
+}
+
+.product-gallery-title h2{
+    margin:0;
+    font-size:28px;
+}
+
+.product-gallery-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fill,minmax(150px,1fr));
+
+    gap:16px;
+}
+
+.product-gallery-card{
+    position:relative;
+    overflow:hidden;
+
+    aspect-ratio:1;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.13);
+
+    border:
+        1px solid
+        rgba(255,255,255,.38);
+
+    backdrop-filter:
+        blur(14px)
+        saturate(150%);
+
+    cursor:pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.product-gallery-card:hover{
+    transform:translateY(-5px);
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.10);
+}
+
+.product-gallery-card img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:
+        transform .45s ease;
+}
+
+.product-gallery-card:hover img{
+    transform:scale(1.06);
+}
+
+
+/* IMAGE VIEWER */
+
+.gallery-viewer{
+    position:fixed;
+
+    inset:0;
+
+    z-index:10020;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:30px;
+
+    background:
+        rgba(15,20,15,.32);
+
+    backdrop-filter:
+        blur(18px);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+.gallery-viewer.open{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.gallery-viewer img{
+    max-width:min(1000px,92vw);
+    max-height:88vh;
+
+    object-fit:contain;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.28);
+
+    transform:scale(.94);
+
+    transition:.35s;
+}
+
+.gallery-viewer.open img{
+    transform:scale(1);
+}
+
+.gallery-viewer-close{
+    position:absolute;
+
+    top:25px;
+    right:25px;
+
+    width:48px;
+    height:48px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.3);
+
+    backdrop-filter:blur(12px);
+
+    font-size:26px;
+
+    cursor:pointer;
+}
+
+@media(max-width:600px){
+
+    .product-gallery-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .product-gallery{
+        margin-top:30px;
+    }
+
+}
+
+</style>
+
+
+<!-- PRODUCT GALLERY FINAL -->
+
+<section class="product-gallery product-gallery-final">
+
+    <div class="product-gallery-title">
+
+        <span>
+            PRODUCT GALLERY
+        </span>
+
+        <div class="gallery-count" style="color:#777;font-size:12px;margin-top:7px;">{{ product_gallery|length }} تصویر</div><h2>
+            تصاویر بیشتر محصول
+        </h2>
+
+    </div>
+
+
+    {% if product_gallery and product_gallery|length > 0 %}
+
+        <div class="product-gallery-grid">
+
+            {% for image in product_gallery %}
+
+                <div
+                    class="product-gallery-card"
+                    onclick="openGalleryImage(
+                        '{{ url_for(
+                            'static',
+                            filename='uploads/products/gallery/' ~ image.filename
+                        ) }}'
+                    )"
+                >
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/products/gallery/' ~ image.filename
+                        ) }}"
+                        alt="{{ product.name }}"
+                        loading="lazy"
+                    >
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div
+            style="
+                padding:35px;
+                text-align:center;
+                border-radius:24px;
+                background:rgba(255,255,255,.12);
+                border:1px solid rgba(255,255,255,.28);
+                color:#888;
+            "
+        >
+            تصاویر بیشتری برای این محصول ثبت نشده است.
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- GALLERY VIEWER -->
+
+<div
+    id="galleryViewer"
+    class="gallery-viewer"
+    onclick="closeGalleryImage(event)"
+>
+
+    <button
+        type="button"
+        class="gallery-viewer-close"
+        onclick="closeGalleryImage()"
+    >
+        ×
+    </button>
+
+    <img
+        id="galleryViewerImage"
+        src=""
+        alt=""
+    >
+
+</div>
+
+
+<script>
+
+function openGalleryImage(src){
+
+    const viewer =
+        document.getElementById(
+            "galleryViewer"
+        );
+
+    const image =
+        document.getElementById(
+            "galleryViewerImage"
+        );
+
+    image.src = src;
+
+    viewer.classList.add("open");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeGalleryImage(event){
+
+    if(
+        event &&
+        event.target &&
+        event.target.id === "galleryViewerImage"
+    ){
+        return;
+    }
+
+    const viewer =
+        document.getElementById(
+            "galleryViewer"
+        );
+
+    viewer.classList.remove("open");
+
+    document.body.style.overflow = "";
+}
+
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeGalleryImage();
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+

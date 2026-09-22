@@ -1,0 +1,110 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .background{
+        background-image:
+            linear-gradient(
+                rgba(247,243,234,.18),
+                rgba(247,243,234,.18)
+            ),
+            url("{{ url_for('static', filename='uploads/backgrounds/' ~ site.background) }}");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+</style>
+
+<section class="hero glass">
+
+    <div class="hero-content">
+        <span class="eyebrow">LUNASHID · CERAMIC STUDIO</span>
+
+        <h1>{{ site.hero_title }}</h1>
+
+        <p>{{ site.hero_text }}</p>
+
+        <div class="actions">
+            <a class="button primary" href="{{ url_for('products') }}">
+                مشاهده مجموعه
+            </a>
+
+            <a class="button" href="{{ url_for('about') }}">
+                داستان لوناشید
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        {% if site.hero_image %}
+        <img src="{{ url_for('static',filename='uploads/hero/' ~ site.hero_image) }}">
+        {% else %}
+        <div class="placeholder-pot">
+            <div></div>
+        </div>
+        {% endif %}
+    </div>
+
+</section>
+
+<section class="collection">
+
+    <div class="section-heading">
+        <span>CURATED COLLECTION</span>
+
+        <h2>مجموعه محصولات</h2>
+
+        <p>
+            قطعاتی برای زندگی روزمره، با روحی متفاوت.
+            هر محصول داستان خودش را دارد.
+        </p>
+    </div>
+
+    <div class="product-grid">
+
+        {% for product in products[:6] %}
+
+        <a class="product-card glass"
+           href="{{ url_for('product',id=product.id) }}">
+
+            <div class="product-image">
+
+                {% if product.image %}
+                <img src="{{ url_for('static',filename='uploads/products/' ~ product.image) }}">
+                {% else %}
+                <div class="product-placeholder"></div>
+                {% endif %}
+
+            </div>
+
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <span>{{ product.price }} تومان</span>
+            </div>
+
+        </a>
+
+        {% else %}
+
+        <div class="empty glass">
+            هنوز محصولی اضافه نشده است.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+
+

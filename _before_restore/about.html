@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+درباره ما | {{ site_settings.site_name }}
+{% endblock %}
+
+{% block content %}
+
+<section
+class="site-glass"
+style="
+border-radius:30px;
+padding:50px;
+">
+
+<h1>
+درباره {{ site_settings.site_name }}
+</h1>
+
+<p
+style="
+max-width:750px;
+line-height:2.2;
+color:rgba(255,255,255,.58);
+">
+{{ site_settings.site_description }}
+</p>
+
+</section>
+
+{% endblock %}

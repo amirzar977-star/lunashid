@@ -1,0 +1,105 @@
+﻿{% extends "base.html" %}
+
+{% block title %}ثبت نام | لوناشید{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="glass-panel auth-card">
+
+        <div class="auth-heading">
+            <span>خوش آمدید</span>
+            <h1>ساخت حساب</h1>
+            <p>
+                برای ثبت سفارش و مشاهده سفارش‌های خود
+                یک حساب کاربری بسازید.
+            </p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+
+            <label>
+                نام و نام خانوادگی
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="مثلاً امیر عباس"
+                    required
+                    maxlength="100"
+                    autocomplete="name">
+            </label>
+
+            <label>
+                شماره موبایل
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="09xxxxxxxxx"
+                    required
+                    maxlength="20"
+                    autocomplete="tel">
+            </label>
+
+            <label>
+                ایمیل
+                <span class="optional">اختیاری</span>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="example@email.com"
+                    maxlength="150"
+                    autocomplete="email">
+            </label>
+
+            <label>
+                رمز عبور
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="حداقل ۶ کاراکتر"
+                    required
+                    minlength="6"
+                    autocomplete="new-password">
+            </label>
+
+            <label>
+                تکرار رمز عبور
+                <input
+                    type="password"
+                    name="password_confirm"
+                    placeholder="رمز عبور را دوباره وارد کنید"
+                    required
+                    minlength="6"
+                    autocomplete="new-password">
+            </label>
+
+            <label class="auth-check">
+                <input type="checkbox" required>
+                <span>
+                    قوانین و شرایط لوناشید را می‌پذیرم.
+                </span>
+            </label>
+
+            <button type="submit" class="auth-submit">
+                ایجاد حساب
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            قبلاً حساب ساخته‌اید؟
+            <a href="{{ url_for('login') }}">ورود به حساب</a>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

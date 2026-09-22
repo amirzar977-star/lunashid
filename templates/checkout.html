@@ -1,0 +1,310 @@
+﻿{% extends "base.html" %}
+
+{% block title %}ثبت سفارش | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+.checkout-page{
+    max-width:1150px;
+    margin:70px auto;
+    padding:25px;
+    direction:rtl;
+}
+
+.checkout-title{
+    margin-bottom:35px;
+}
+
+.checkout-title h1{
+    font-size:42px;
+    margin:0 0 8px;
+}
+
+.checkout-title p{
+    color:#777;
+}
+
+.checkout-grid{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:25px;
+    align-items:start;
+}
+
+.checkout-card,
+.checkout-summary{
+    border:1px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(14px) saturate(160%);
+    border-radius:30px;
+    padding:30px;
+}
+
+.checkout-card h2,
+.checkout-summary h2{
+    margin-top:0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    font-size:14px;
+    color:#555;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding:15px;
+    border-radius:16px;
+    border:1px solid rgba(0,0,0,.09);
+    background:rgba(255,255,255,.38);
+    font-family:inherit;
+    outline:none;
+}
+
+.form-group textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:#A91D3A;
+}
+
+.submit-order{
+    width:100%;
+    margin-top:25px;
+    padding:17px;
+    border:0;
+    border-radius:17px;
+    background:#A91D3A;
+    color:white;
+    font-family:inherit;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.summary-product{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:13px 0;
+    border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.summary-product span:last-child{
+    white-space:nowrap;
+}
+
+.summary-total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:25px;
+    padding-top:20px;
+    border-top:1px solid rgba(0,0,0,.08);
+    font-size:21px;
+    font-weight:800;
+}
+
+@media(max-width:850px){
+
+    .checkout-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+}
+</style>
+
+<section class="checkout-page">
+
+    <div class="checkout-title">
+
+        <h1>ثبت سفارش</h1>
+
+        <p>
+            اطلاعات خود را وارد کنید تا سفارش شما ثبت شود.
+        </p>
+
+    </div>
+
+
+    <form
+        action="{{ url_for('checkout_submit') }}"
+        method="POST"
+    >
+
+        <div class="checkout-grid">
+
+            <div class="checkout-card">
+
+                <h2>اطلاعات شما</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            نام و نام خانوادگی *
+                        </label>
+
+                        <input
+                            type="text"
+                            name="customer_name"
+                            required
+                            autocomplete="name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            شماره تماس *
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="phone"
+                            required
+                            autocomplete="tel"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            ایمیل
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            autocomplete="email"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            آدرس کامل *
+                        </label>
+
+                        <textarea
+                            name="address"
+                            required
+                            placeholder="استان، شهر، خیابان، کوچه، پلاک..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            توضیحات سفارش
+                        </label>
+
+                        <textarea
+                            name="description"
+                            placeholder="اگر توضیح خاصی درباره سفارش دارید..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="submit-order"
+                    type="submit"
+                >
+                    ثبت نهایی سفارش
+                </button>
+
+            </div>
+
+
+            <aside class="checkout-summary">
+
+                <h2>خلاصه سفارش</h2>
+
+                {% for item in items %}
+
+                <div class="summary-product">
+
+                    <span>
+                        {{ item.product.name }}
+                        × {{ item.quantity }}
+                    </span>
+
+                    <span>
+                        {{ "{:,}".format(item.subtotal) }}
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+
+                <div class="summary-total">
+
+                    <span>
+                        مبلغ کل
+                    </span>
+
+                    <span>
+                        {{ "{:,}".format(total) }} تومان
+                    </span>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+

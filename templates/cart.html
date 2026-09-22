@@ -1,0 +1,379 @@
+﻿{% extends "base.html" %}
+
+{% block title %}سبد خرید | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+.cart-page{
+    max-width:1150px;
+    margin:70px auto;
+    padding:25px;
+    direction:rtl;
+}
+
+.cart-title{
+    margin-bottom:35px;
+}
+
+.cart-title h1{
+    font-size:42px;
+    margin:0 0 8px;
+}
+
+.cart-title p{
+    color:#777;
+}
+
+.cart-layout{
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:25px;
+    align-items:start;
+}
+
+.cart-items{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.cart-item{
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    gap:20px;
+    align-items:center;
+    padding:18px;
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(12px) saturate(160%);
+}
+
+.cart-image{
+    width:110px;
+    height:110px;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.cart-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cart-info h3{
+    margin:0 0 8px;
+}
+
+.cart-info p{
+    color:#777;
+    margin:0;
+}
+
+.cart-price{
+    font-weight:800;
+    color:#A91D3A;
+}
+
+.cart-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:15px;
+}
+
+.cart-actions input{
+    width:65px;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid rgba(0,0,0,.1);
+    text-align:center;
+}
+
+.cart-actions button{
+    border:0;
+    cursor:pointer;
+    border-radius:12px;
+    padding:10px 14px;
+    font-family:inherit;
+}
+
+.update-btn{
+    background:#eef2e9;
+}
+
+.remove-btn{
+    background:rgba(169,29,58,.08);
+    color:#A91D3A;
+}
+
+.cart-summary{
+    position:sticky;
+    top:25px;
+    padding:25px;
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(12px) saturate(160%);
+}
+
+.cart-summary h2{
+    margin-top:0;
+}
+
+.summary-line{
+    display:flex;
+    justify-content:space-between;
+    margin:18px 0;
+    color:#666;
+}
+
+.summary-total{
+    border-top:1px solid rgba(0,0,0,.08);
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    font-size:22px;
+    font-weight:800;
+}
+
+.checkout-btn{
+    display:block;
+    text-align:center;
+    margin-top:25px;
+    padding:16px;
+    border-radius:16px;
+    background:#A91D3A;
+    color:white;
+    text-decoration:none;
+}
+
+.clear-cart{
+    width:100%;
+    margin-top:12px;
+    padding:13px;
+    border:0;
+    border-radius:15px;
+    background:transparent;
+    color:#888;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.empty-cart{
+    padding:70px 20px;
+    text-align:center;
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(12px);
+}
+
+.empty-cart h2{
+    margin-bottom:10px;
+}
+
+.shop-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 25px;
+    border-radius:15px;
+    background:#A91D3A;
+    color:white;
+    text-decoration:none;
+}
+
+@media(max-width:850px){
+
+    .cart-layout{
+        grid-template-columns:1fr;
+    }
+
+    .cart-summary{
+        position:static;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .cart-item{
+        grid-template-columns:80px 1fr;
+    }
+
+    .cart-image{
+        width:80px;
+        height:80px;
+    }
+
+    .cart-price{
+        grid-column:2;
+    }
+
+}
+</style>
+
+<section class="cart-page">
+
+    <div class="cart-title">
+        <h1>سبد خرید</h1>
+        <p>{{ count }} محصول در سبد شماست</p>
+    </div>
+
+    {% if items %}
+
+    <div class="cart-layout">
+
+        <div class="cart-items">
+
+            {% for item in items %}
+
+            <div class="cart-item">
+
+                <div class="cart-image">
+
+                    {% if item.product.image %}
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/products/' ~ item.product.image) }}"
+                        alt="{{ item.product.name }}"
+                    >
+
+                    {% endif %}
+
+                </div>
+
+                <div class="cart-info">
+
+                    <h3>{{ item.product.name }}</h3>
+
+                    <p>
+                        {{ "{:,}".format(item.product.price) }} تومان
+                    </p>
+
+                    <div class="cart-actions">
+
+                        <form
+                            action="{{ url_for('update_cart', product_id=item.product.id) }}"
+                            method="POST"
+                        >
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                value="{{ item.quantity }}"
+                                min="0"
+                                max="99"
+                            >
+
+                            <button class="update-btn" type="submit">
+                                بروزرسانی
+                            </button>
+
+                        </form>
+
+                        <form
+                            action="{{ url_for('remove_from_cart', product_id=item.product.id) }}"
+                            method="POST"
+                        >
+
+                            <button class="remove-btn" type="submit">
+                                حذف
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="cart-price">
+                    {{ "{:,}".format(item.subtotal) }} تومان
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <aside class="cart-summary">
+
+            <h2>خلاصه سفارش</h2>
+
+            <div class="summary-line">
+
+                <span>تعداد</span>
+
+                <span>
+                    {{ count }}
+                </span>
+
+            </div>
+
+            <div class="summary-total">
+
+                <span>مبلغ کل</span>
+
+                <span>
+                    {{ "{:,}".format(total) }} تومان
+                </span>
+
+            </div>
+
+            <a
+                class="checkout-btn"
+                href="{{ url_for('checkout') }}"
+            >
+                ادامه ثبت سفارش
+            </a>
+
+            <form
+                action="{{ url_for('clear_cart') }}"
+                method="POST"
+            >
+
+                <button class="clear-cart" type="submit">
+                    خالی کردن سبد
+                </button>
+
+            </form>
+
+        </aside>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-cart">
+
+        <h2>سبد خرید خالی است</h2>
+
+        <p>
+            هنوز محصولی به سبد خرید اضافه نکرده‌اید.
+        </p>
+
+        <a
+            class="shop-btn"
+            href="{{ url_for('products') }}"
+        >
+            مشاهده مجموعه محصولات
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+

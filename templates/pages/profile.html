@@ -1,0 +1,94 @@
+﻿{% extends "base.html" %}
+
+{% block title %}پروفایل من{% endblock %}
+
+{% block content %}
+
+<section class="section-page">
+
+    <div class="page-heading">
+        <span>حساب کاربری</span>
+        <h1>پروفایل من</h1>
+        <p>اطلاعات و سفارش‌های اخیر شما.</p>
+    </div>
+
+    {% if customer %}
+
+    <div class="profile-grid">
+
+        <div class="glass-panel profile-card">
+
+            <div class="profile-avatar">
+                {{ customer.name[:1] if customer.name else 'ل' }}
+            </div>
+
+            <h2>{{ customer.name or 'مشتری لوناشید' }}</h2>
+
+            <p>{{ customer.phone }}</p>
+
+            {% if customer.email %}
+            <p>{{ customer.email }}</p>
+            {% endif %}
+
+        </div>
+
+        <div class="glass-panel">
+
+            <h2>سفارش‌های من</h2>
+
+            {% if orders %}
+
+            <div class="profile-orders">
+
+                {% for order in orders %}
+
+                <a href="{{ url_for('track_order') }}?order_id={{ order.id }}"
+                   class="profile-order">
+
+                    <strong>سفارش #{{ order.id }}</strong>
+
+                    <span>{{ order.status }}</span>
+
+                    <small>{{ "{:,}".format(order.total or 0) }} تومان</small>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <p class="muted">
+                هنوز سفارشی ثبت نکرده‌اید.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="glass-panel empty-profile">
+
+        <h2>پروفایل هنوز فعال نشده</h2>
+
+        <p>
+            برای مشاهده اطلاعات حساب و سفارش‌ها،
+            ابتدا یک سفارش با شماره تماس خود ثبت کنید.
+        </p>
+
+        <a class="glass-button" href="{{ url_for('login') }}">
+            مشاهده محصولات
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+

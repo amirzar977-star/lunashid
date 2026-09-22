@@ -1,0 +1,75 @@
+﻿{% extends "base.html" %}
+
+{% block title %}تماس با ما{% endblock %}
+
+{% block content %}
+
+<section class="section-page">
+
+    <div class="page-heading">
+        <span>ارتباط</span>
+        <h1>با ما در تماس باشید</h1>
+        <p>
+            سؤال، پیشنهاد یا درخواست سفارش اختصاصی دارید؟
+            پیام خود را برای ما ارسال کنید.
+        </p>
+    </div>
+
+    <div class="contact-grid">
+
+        <div class="glass-panel contact-info">
+
+            <span class="eyebrow">لوناشید</span>
+
+            <h2>پیامتان را برای ما بنویسید</h2>
+
+            <p>
+                اطلاعات تماس شما فقط برای پاسخ‌گویی به پیام
+                استفاده می‌شود.
+            </p>
+
+            <div class="contact-feature">
+                <strong>پشتیبانی</strong>
+                <span>پاسخ‌گویی درباره سفارش‌ها و محصولات</span>
+            </div>
+
+            <div class="contact-feature">
+                <strong>سفارش اختصاصی</strong>
+                <span>ایده خود را برای ما توضیح دهید</span>
+            </div>
+
+        </div>
+
+        <form method="POST" action="{{ url_for('contact') }}" class="glass-panel contact-form">
+
+            <label>
+                نام
+                <input name="name" required maxlength="80">
+            </label>
+
+            <label>
+                شماره تماس یا ایمیل
+                <input name="contact" required maxlength="120">
+            </label>
+
+            <label>
+                موضوع
+                <input name="subject" required maxlength="150">
+            </label>
+
+            <label>
+                پیام
+                <textarea name="message" required maxlength="3000" rows="7"></textarea>
+            </label>
+
+            <button class="glass-button" type="submit">
+                ارسال پیام
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

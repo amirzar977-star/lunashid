@@ -1,0 +1,36 @@
+﻿{% extends "base.html" %}
+
+{% block title %}صفحه پیدا نشد{% endblock %}
+
+{% block content %}
+
+<section class="section-page center-page">
+
+    <div class="glass-panel error-card">
+
+        <div class="error-number">404</div>
+
+        <h1>این صفحه پیدا نشد</h1>
+
+        <p>
+            شاید این مسیر تغییر کرده یا صفحه‌ای که دنبال آن بودید
+            دیگر وجود ندارد.
+        </p>
+
+        <div class="error-actions">
+
+            <a class="glass-button" href="{{ url_for('home') }}">
+                صفحه اصلی
+            </a>
+
+            <a class="glass-button secondary" href="{{ url_for('products') }}">
+                محصولات
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

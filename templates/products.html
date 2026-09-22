@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+
+<section class="page-head">
+    <span>COLLECTION</span>
+    <h1>همه محصولات</h1>
+    <p>هر قطعه، یک داستان کوچک از دست و خاک.</p>
+</section>
+
+<section class="product-grid products-page">
+
+{% for product in products %}
+
+<a class="product-card glass"
+   href="{{ url_for('product',id=product.id) }}">
+
+    <div class="product-image">
+        {% if product.image %}
+        <img src="{{ url_for('static',filename='uploads/products/' ~ product.image) }}">
+        {% else %}
+        <div class="product-placeholder"></div>
+        {% endif %}
+    </div>
+
+    <div class="product-info">
+        <h3>{{ product.name }}</h3>
+        <span>{{ product.price }} تومان</span>
+    </div>
+
+</a>
+
+{% else %}
+
+<div class="empty glass">محصولی وجود ندارد.</div>
+
+{% endfor %}
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+
+

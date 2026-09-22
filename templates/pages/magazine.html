@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+
+{% block title %}مجله لوناشید{% endblock %}
+
+{% block content %}
+
+<section class="section-page">
+
+    <div class="page-heading">
+        <span>مجله لوناشید</span>
+        <h1>دنیای سرامیک</h1>
+        <p>
+            مطالب کوتاه درباره سرامیک، دکوراسیون و مراقبت از محصولات.
+        </p>
+    </div>
+
+    <div class="magazine-grid">
+
+        <article class="glass-panel article-card">
+            <div class="article-tag">راهنما</div>
+            <h2>چطور از ظروف سرامیکی مراقبت کنیم؟</h2>
+            <p>
+                چند نکته ساده برای اینکه محصولات سرامیکی
+                مدت بیشتری زیبا و سالم بمانند.
+            </p>
+            <a href="{{ url_for('magazine_article', slug='ceramic-care') }}">
+                مطالعه مقاله
+            </a>
+        </article>
+
+        <article class="glass-panel article-card">
+            <div class="article-tag">دکوراسیون</div>
+            <h2>سرامیک در فضای مینیمال</h2>
+            <p>
+                چگونه یک قطعه دست‌ساز می‌تواند نقطه توجه
+                یک فضای ساده باشد؟
+            </p>
+            <a href="{{ url_for('magazine_article', slug='ceramic-minimal') }}">
+                مطالعه مقاله
+            </a>
+        </article>
+
+        <article class="glass-panel article-card">
+            <div class="article-tag">الهام</div>
+            <h2>چرا محصولات دست‌ساز متفاوت‌اند؟</h2>
+            <p>
+                تفاوت قطعه‌ای که با دست ساخته شده
+                با یک محصول تولید انبوه.
+            </p>
+            <a href="{{ url_for('magazine_article', slug='handmade') }}">
+                مطالعه مقاله
+            </a>
+        </article>
+
+    </div>
+
+</section>
+
+{% endblock %}

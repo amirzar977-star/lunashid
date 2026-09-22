@@ -1,0 +1,79 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+محصولات | {{ site_settings.site_name }}
+{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom:25px">
+
+<h1>
+مجموعه محصولات
+</h1>
+
+<p style="color:rgba(255,255,255,.45)">
+قطعاتی برای زندگی روزمره، با روحی متفاوت
+</p>
+
+</div>
+
+
+<div
+style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:18px;
+">
+
+{% for p in products %}
+
+<a
+href="/product/{{ p.id }}"
+class="site-glass"
+style="
+display:block;
+border-radius:22px;
+overflow:hidden;
+">
+
+{% if p.image %}
+
+<img
+src="/static/uploads/products/{{ p.image }}"
+style="
+width:100%;
+height:260px;
+object-fit:cover;
+display:block;
+">
+
+{% endif %}
+
+<div style="padding:20px">
+
+<div
+style="
+font-size:10px;
+color:{{ site_settings.accent_color }};
+">
+{{ p.category }}
+</div>
+
+<h3>
+{{ p.name }}
+</h3>
+
+<strong>
+{{ "{:,}".format(p.price) }} تومان
+</strong>
+
+</div>
+
+</a>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

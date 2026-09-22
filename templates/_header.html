@@ -1,0 +1,51 @@
+﻿<header class="site-header">
+
+    <div class="header-inner">
+
+        <!-- برند -->
+        <a href="/" class="brand">
+            <span class="brand-mark">L</span>
+
+            <span class="brand-text">
+                <strong>LUNASHID</strong>
+                <small>HANDMADE CERAMICS</small>
+            </span>
+        </a>
+
+        <!-- منوی اصلی -->
+        <nav class="main-nav">
+            <a href="/" class="active">خانه</a>
+            <a href="/products">مجموعه</a>
+            <a href="/about">درباره ما</a>
+        <a href="{{ url_for('track_order') }}">
+    پیگیری سفارش
+</a>
+</nav>
+
+        <!-- ابزارها -->
+        <div class="header-tools">
+
+            <label class="header-image-btn" title="انتخاب تصویر پس‌زمینه">
+                <input type="file" id="backgroundInput" accept="image/*">
+                <span>تصویر</span>
+            </label>
+
+            <a href="/cart" class="cart-btn">
+                <span>سبد</span>
+                <b id="cartCount">0</b>
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,91 @@
+﻿{% extends "base.html" %}
+
+{% block title %}درباره لوناشید{% endblock %}
+
+{% block content %}
+
+<section class="section-page">
+
+    <div class="page-heading">
+        <span>لوناشید</span>
+        <h1>داستان ما</h1>
+        <p>
+            جایی که خاک، دست انسان و عشق به جزئیات
+            تبدیل به قطعه‌ای برای زندگی می‌شود.
+        </p>
+    </div>
+
+    <div class="about-grid">
+
+        <div class="glass-panel about-text">
+
+            <span class="eyebrow">درباره ما</span>
+
+            <h2>ساخته شده با دست، برای زندگی</h2>
+
+            <p>
+                لوناشید یک مجموعه مستقل در زمینه سرامیک و محصولات دست‌ساز است.
+                ما باور داریم یک محصول فقط یک وسیله نیست؛
+                می‌تواند بخشی از فضای خانه و خاطرات روزمره شما باشد.
+            </p>
+
+            <p>
+                از انتخاب فرم و متریال تا پرداخت نهایی،
+                هر قطعه با توجه به جزئیات ساخته می‌شود.
+            </p>
+
+            <div class="about-values">
+
+                <div>
+                    <strong>01</strong>
+                    <span>ساخت با دقت</span>
+                </div>
+
+                <div>
+                    <strong>02</strong>
+                    <span>طراحی متفاوت</span>
+                </div>
+
+                <div>
+                    <strong>03</strong>
+                    <span>توجه به جزئیات</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="glass-panel manager-card">
+
+            {% if site.manager_image %}
+
+            <img
+                src="{{ url_for('static', filename='uploads/manager/' ~ site.manager_image) }}"
+                alt="مدیریت لوناشید"
+                class="manager-image"
+            >
+
+            {% else %}
+
+            <div class="manager-empty">
+                <span>مدیریت لوناشید</span>
+            </div>
+
+            {% endif %}
+
+            <div class="manager-info">
+                <span>مدیریت</span>
+                <h3>لوناشید</h3>
+                <p>
+                    ساختن چیزهای ساده‌ای که بتوانند
+                    حس خوبی به زندگی روزمره اضافه کنند.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

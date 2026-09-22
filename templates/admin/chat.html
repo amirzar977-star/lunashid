@@ -1,0 +1,36 @@
+﻿{% extends "admin/base.html" %}
+{% block title %}پیام‌ها{% endblock %}
+
+{% block content %}
+
+<div class="admin-head">
+<span>INBOX</span>
+<h1>پیام‌ها</h1>
+</div>
+
+<div class="messages">
+
+{% for message in messages %}
+
+<div class="message-card glass">
+    <div>
+        <strong>{{ message.name }}</strong>
+        <small>{{ message.email }}</small>
+    </div>
+    <p>{{ message.message }}</p>
+    <small>{{ message.created_at }}</small>
+</div>
+
+{% else %}
+
+<div class="empty glass">
+    پیامی وجود ندارد.
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
+
+

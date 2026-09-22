@@ -1,0 +1,64 @@
+﻿{% extends "base.html" %}
+
+{% block title %}ورود | لوناشید{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="glass-panel auth-card">
+
+        <div class="auth-heading">
+            <span>حساب کاربری</span>
+            <h1>خوش برگشتی</h1>
+            <p>
+                وارد حساب لوناشید خود شوید.
+            </p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+
+            <label>
+                شماره موبایل
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="09xxxxxxxxx"
+                    required
+                    autocomplete="tel">
+            </label>
+
+            <label>
+                رمز عبور
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="رمز عبور"
+                    required
+                    autocomplete="current-password">
+            </label>
+
+            <button type="submit" class="auth-submit">
+                ورود
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            هنوز حساب نداری؟
+            <a href="{{ url_for('register') }}">
+                ثبت نام
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

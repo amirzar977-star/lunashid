@@ -1,0 +1,950 @@
+﻿from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+import os
+import sqlite3
+import json
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+app.secret_key = "lunashid-secret-key"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "lunashid.db")
+
+UPLOAD_DIR = os.path.join(BASE_DIR, "static", "uploads")
+HERO_DIR = os.path.join(UPLOAD_DIR, "hero")
+BG_DIR = os.path.join(UPLOAD_DIR, "backgrounds")
+PRODUCT_DIR = os.path.join(UPLOAD_DIR, "products")
+MANAGER_DIR = os.path.join(UPLOAD_DIR, "manager")
+
+for folder in [UPLOAD_DIR, HERO_DIR, BG_DIR, PRODUCT_DIR, MANAGER_DIR]:
+    os.makedirs(folder, exist_ok=True)
+
+ALLOWED = {"png", "jpg", "jpeg", "webp", "gif"}
+
+
+def db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = db()
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            description TEXT DEFAULT '',
+            price INTEGER DEFAULT 0,
+            image TEXT DEFAULT '',
+            category TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            phone TEXT,
+            email TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_name TEXT,
+            phone TEXT,
+            address TEXT,
+            items TEXT,
+            total INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'جدید',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            phone TEXT,
+            message TEXT,
+            is_read INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    defaults = {
+        "site_name": "لوناشید",
+        "site_description": "ظروف سفالی دست‌ساز با روحی متفاوت",
+        "announcement": "",
+        "hero_title": "هنر، در لمس خاک",
+        "hero_text": "مجموعه‌ای از قطعات سفالی دست‌ساز برای زندگی روزمره",
+        "hero_image": "",
+        "background": "",
+        "manager_image": "",
+        "primary_color": "#A91D3A",
+        "glass_opacity": "0.02",
+        "glass_blur": "10"
+    }
+
+    for key, value in defaults.items():
+        conn.execute(
+            "INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)",
+            (key, value)
+        )
+
+    conn.commit()
+    conn.close()
+
+
+def get_settings():
+    conn = db()
+    rows = conn.execute("SELECT key,value FROM settings").fetchall()
+    conn.close()
+    return {row["key"]: row["value"] for row in rows}
+
+
+def save_setting(key, value):
+    conn = db()
+    conn.execute(
+        "INSERT OR REPLACE INTO settings(key,value) VALUES(?,?)",
+        (key, value)
+    )
+    conn.commit()
+    conn.close()
+
+
+def allowed_file(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED
+    )
+
+
+def save_upload(file, folder):
+    if not file or not file.filename:
+        return ""
+
+    if not allowed_file(file.filename):
+        return ""
+
+    filename = secure_filename(file.filename)
+
+    base, ext = os.path.splitext(filename)
+    counter = 1
+    final_name = filename
+
+    while os.path.exists(os.path.join(folder, final_name)):
+        final_name = f"{base}_{counter}{ext}"
+        counter += 1
+
+    file.save(os.path.join(folder, final_name))
+    return final_name
+
+
+def delete_upload(folder, filename):
+    if not filename:
+        return
+
+    path = os.path.join(folder, filename)
+
+    if os.path.exists(path):
+        try:
+            os.remove(path)
+        except Exception:
+            pass
+
+
+def admin_required():
+    return session.get("admin") is True
+
+
+# =========================================================
+# CART
+# =========================================================
+
+def get_cart():
+    return session.get("cart", {})
+
+
+def save_cart(cart):
+    session["cart"] = cart
+    session.modified = True
+
+
+def cart_items():
+    cart = get_cart()
+
+    if not cart:
+        return [], 0, 0
+
+    ids = [int(x) for x in cart.keys()]
+
+    placeholders = ",".join(["?"] * len(ids))
+
+    conn = db()
+    products = conn.execute(
+        f"SELECT * FROM products WHERE id IN ({placeholders})",
+        ids
+    ).fetchall()
+    conn.close()
+
+    result = []
+    total = 0
+    count = 0
+
+    for product in products:
+        quantity = int(cart.get(str(product["id"]), 0))
+
+        if quantity <= 0:
+            continue
+
+        subtotal = product["price"] * quantity
+
+        result.append({
+            "product": product,
+            "quantity": quantity,
+            "subtotal": subtotal
+        })
+
+        total += subtotal
+        count += quantity
+
+    return result, total, count
+
+
+@app.context_processor
+def inject_site():
+    items, total, count = cart_items()
+
+    return {
+        "site": get_settings(),
+        "cart_count": count,
+        "cart_total": total
+    }
+
+
+# =========================================================
+# PUBLIC
+# =========================================================
+
+@app.route("/")
+def home():
+    conn = db()
+    products = conn.execute(
+        "SELECT * FROM products ORDER BY id DESC LIMIT 8"
+    ).fetchall()
+    conn.close()
+
+    return render_template(
+        "index.html",
+        products=products
+    )
+
+
+@app.route("/products")
+def products():
+    conn = db()
+
+    category = request.args.get("category", "").strip()
+    search = request.args.get("q", "").strip()
+
+    if category:
+        rows = conn.execute(
+            "SELECT * FROM products WHERE category=? ORDER BY id DESC",
+            (category,)
+        ).fetchall()
+
+    elif search:
+        rows = conn.execute(
+            """SELECT * FROM products
+               WHERE name LIKE ? OR description LIKE ?
+               ORDER BY id DESC""",
+            (f"%{search}%", f"%{search}%")
+        ).fetchall()
+
+    else:
+        rows = conn.execute(
+            "SELECT * FROM products ORDER BY id DESC"
+        ).fetchall()
+
+    categories = conn.execute(
+        "SELECT DISTINCT category FROM products WHERE category != ''"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "products.html",
+        products=rows,
+        categories=categories
+    )
+
+
+@app.route("/product/<int:product_id>")
+def product(product_id):
+    conn = db()
+
+    item = conn.execute(
+        "SELECT * FROM products WHERE id=?",
+        (product_id,)
+    ).fetchone()
+
+    related = conn.execute(
+        """SELECT * FROM products
+           WHERE category=?
+           AND id!=?
+           ORDER BY id DESC
+           LIMIT 4""",
+        (item["category"] if item else "", product_id)
+    ).fetchall()
+
+    conn.close()
+
+    if not item:
+        return "محصول پیدا نشد", 404
+
+    return render_template(
+        "product.html",
+        product=item,
+        related=related
+    )
+
+
+# =========================================================
+# CART ROUTES
+# =========================================================
+
+@app.route("/cart")
+def cart():
+    items, total, count = cart_items()
+
+    return render_template(
+        "cart.html",
+        items=items,
+        total=total,
+        count=count
+    )
+
+
+@app.route("/cart/add/<int:product_id>", methods=["POST"])
+def add_to_cart(product_id):
+
+    conn = db()
+
+    product = conn.execute(
+        "SELECT id FROM products WHERE id=?",
+        (product_id,)
+    ).fetchone()
+
+    conn.close()
+
+    if not product:
+        flash("این محصول وجود ندارد.")
+        return redirect(url_for("products"))
+
+    try:
+        quantity = int(request.form.get("quantity", 1))
+    except ValueError:
+        quantity = 1
+
+    quantity = max(1, min(quantity, 99))
+
+    cart = get_cart()
+
+    key = str(product_id)
+
+    cart[key] = int(cart.get(key, 0)) + quantity
+
+    cart[key] = min(cart[key], 99)
+
+    save_cart(cart)
+
+    flash("محصول به سبد خرید اضافه شد.")
+
+    return redirect(
+        request.form.get("next")
+        or url_for("cart")
+    )
+
+
+@app.route("/cart/update/<int:product_id>", methods=["POST"])
+def update_cart(product_id):
+
+    try:
+        quantity = int(request.form.get("quantity", 1))
+    except ValueError:
+        quantity = 1
+
+    cart = get_cart()
+    key = str(product_id)
+
+    if key in cart:
+
+        if quantity <= 0:
+            cart.pop(key, None)
+
+        else:
+            cart[key] = min(quantity, 99)
+
+    save_cart(cart)
+
+    return redirect(url_for("cart"))
+
+
+@app.route("/cart/remove/<int:product_id>", methods=["POST"])
+def remove_from_cart(product_id):
+
+    cart = get_cart()
+
+    cart.pop(str(product_id), None)
+
+    save_cart(cart)
+
+    return redirect(url_for("cart"))
+
+
+@app.route("/cart/clear", methods=["POST"])
+def clear_cart():
+
+    session["cart"] = {}
+    session.modified = True
+
+    return redirect(url_for("cart"))
+
+
+# =========================================================
+# ABOUT / MESSAGE / ORDER
+# =========================================================
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/message", methods=["POST"])
+def message():
+
+    name = request.form.get("name", "").strip()
+    phone = request.form.get("phone", "").strip()
+    msg = request.form.get("message", "").strip()
+
+    if msg:
+        conn = db()
+
+        conn.execute(
+            "INSERT INTO messages(name,phone,message) VALUES(?,?,?)",
+            (name, phone, msg)
+        )
+
+        conn.commit()
+        conn.close()
+
+    flash("پیام شما با موفقیت ارسال شد.")
+
+    return redirect(request.referrer or url_for("home"))
+
+
+@app.route("/api/order", methods=["POST"])
+def api_order():
+
+    data = request.get_json(silent=True) or request.form
+
+    name = data.get("customer_name", "")
+    phone = data.get("phone", "")
+    address = data.get("address", "")
+    items = data.get("items", "")
+    total = data.get("total", 0)
+
+    conn = db()
+
+    conn.execute(
+        """INSERT INTO orders
+           (customer_name,phone,address,items,total)
+           VALUES(?,?,?,?,?)""",
+        (name, phone, address, str(items), int(total or 0))
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"ok": True})
+
+
+# =========================================================
+# ADMIN
+# =========================================================
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+
+        if username == "admin" and password == "admin123":
+
+            session["admin"] = True
+
+            return redirect(
+                url_for("admin_dashboard")
+            )
+
+        flash("نام کاربری یا رمز عبور اشتباه است.")
+
+    return render_template("admin/login.html")
+
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.pop("admin", None)
+
+    return redirect(url_for("admin_login"))
+
+
+@app.route("/admin")
+@app.route("/admin/dashboard")
+def admin_dashboard():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    product_count = conn.execute(
+        "SELECT COUNT(*) FROM products"
+    ).fetchone()[0]
+
+    user_count = conn.execute(
+        "SELECT COUNT(*) FROM users"
+    ).fetchone()[0]
+
+    order_count = conn.execute(
+        "SELECT COUNT(*) FROM orders"
+    ).fetchone()[0]
+
+    unread_count = conn.execute(
+        "SELECT COUNT(*) FROM messages WHERE is_read=0"
+    ).fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        "admin/dashboard.html",
+        product_count=product_count,
+        user_count=user_count,
+        order_count=order_count,
+        unread_count=unread_count
+    )
+
+
+@app.route("/admin/products")
+def admin_products():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    items = conn.execute(
+        "SELECT * FROM products ORDER BY id DESC"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin/products.html",
+        products=items
+    )
+
+
+@app.route("/admin/products/add", methods=["GET", "POST"])
+def admin_add_product():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    if request.method == "POST":
+
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        price = request.form.get("price", "0").strip()
+        category = request.form.get("category", "").strip()
+
+        try:
+            price = int(price or 0)
+        except ValueError:
+            price = 0
+
+        image = save_upload(
+            request.files.get("image"),
+            PRODUCT_DIR
+        )
+
+        conn = db()
+
+        conn.execute(
+            """INSERT INTO products
+               (name,description,price,image,category)
+               VALUES(?,?,?,?,?)""",
+            (
+                name,
+                description,
+                price,
+                image,
+                category
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        flash("محصول اضافه شد.")
+
+        return redirect(
+            url_for("admin_products")
+        )
+
+    return render_template(
+        "admin/add_product.html"
+    )
+
+
+@app.route("/admin/products/delete/<int:product_id>")
+def admin_delete_product(product_id):
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    item = conn.execute(
+        "SELECT image FROM products WHERE id=?",
+        (product_id,)
+    ).fetchone()
+
+    if item:
+        delete_upload(
+            PRODUCT_DIR,
+            item["image"]
+        )
+
+    conn.execute(
+        "DELETE FROM products WHERE id=?",
+        (product_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(
+        url_for("admin_products")
+    )
+
+
+@app.route("/admin/users")
+def admin_users():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    users = conn.execute(
+        "SELECT * FROM users ORDER BY id DESC"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin/users.html",
+        users=users
+    )
+
+
+@app.route("/admin/orders")
+def admin_orders():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    orders = conn.execute(
+        "SELECT * FROM orders ORDER BY id DESC"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin/orders.html",
+        orders=orders
+    )
+
+
+@app.route("/admin/orders/status/<int:order_id>", methods=["POST"])
+def admin_order_status(order_id):
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    status = request.form.get(
+        "status",
+        "جدید"
+    )
+
+    conn = db()
+
+    conn.execute(
+        "UPDATE orders SET status=? WHERE id=?",
+        (status, order_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(
+        url_for("admin_orders")
+    )
+
+
+@app.route("/admin/chat")
+def admin_chat():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    conn = db()
+
+    messages = conn.execute(
+        "SELECT * FROM messages ORDER BY id DESC"
+    ).fetchall()
+
+    conn.execute(
+        "UPDATE messages SET is_read=1"
+    )
+
+    conn.commit()
+    conn.close()
+
+    return render_template(
+        "admin/chat.html",
+        messages=messages
+    )
+
+
+@app.route("/admin/customize", methods=["GET", "POST"])
+def admin_customize():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    if request.method == "POST":
+
+        text_settings = [
+            "site_name",
+            "site_description",
+            "announcement",
+            "hero_title",
+            "hero_text",
+            "primary_color",
+            "glass_opacity",
+            "glass_blur"
+        ]
+
+        for key in text_settings:
+
+            if key in request.form:
+                save_setting(
+                    key,
+                    request.form.get(key, "")
+                )
+
+        hero = request.files.get("hero_image")
+        background = request.files.get("background")
+        manager = request.files.get("manager_image")
+
+        if hero and hero.filename:
+
+            old = get_settings().get(
+                "hero_image",
+                ""
+            )
+
+            delete_upload(
+                HERO_DIR,
+                old
+            )
+
+            filename = save_upload(
+                hero,
+                HERO_DIR
+            )
+
+            if filename:
+                save_setting(
+                    "hero_image",
+                    filename
+                )
+
+        if background and background.filename:
+
+            old = get_settings().get(
+                "background",
+                ""
+            )
+
+            delete_upload(
+                BG_DIR,
+                old
+            )
+
+            filename = save_upload(
+                background,
+                BG_DIR
+            )
+
+            if filename:
+                save_setting(
+                    "background",
+                    filename
+                )
+
+        if manager and manager.filename:
+
+            old = get_settings().get(
+                "manager_image",
+                ""
+            )
+
+            delete_upload(
+                MANAGER_DIR,
+                old
+            )
+
+            filename = save_upload(
+                manager,
+                MANAGER_DIR
+            )
+
+            if filename:
+                save_setting(
+                    "manager_image",
+                    filename
+                )
+
+        flash("تنظیمات ذخیره شد.")
+
+        return redirect(
+            url_for("admin_customize")
+        )
+
+    return render_template(
+        "admin/customize.html"
+    )
+
+
+@app.route("/admin/customize/delete-hero")
+def admin_delete_hero():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    filename = get_settings().get(
+        "hero_image",
+        ""
+    )
+
+    delete_upload(
+        HERO_DIR,
+        filename
+    )
+
+    save_setting(
+        "hero_image",
+        ""
+    )
+
+    return redirect(
+        url_for("admin_customize")
+    )
+
+
+@app.route("/admin/customize/delete-background")
+def admin_delete_background():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    filename = get_settings().get(
+        "background",
+        ""
+    )
+
+    delete_upload(
+        BG_DIR,
+        filename
+    )
+
+    save_setting(
+        "background",
+        ""
+    )
+
+    return redirect(
+        url_for("admin_customize")
+    )
+
+
+@app.route("/admin/customize/delete-manager")
+def admin_delete_manager():
+
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    filename = get_settings().get(
+        "manager_image",
+        ""
+    )
+
+    delete_upload(
+        MANAGER_DIR,
+        filename
+    )
+
+    save_setting(
+        "manager_image",
+        ""
+    )
+
+    return redirect(
+        url_for("admin_customize")
+    )
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return "صفحه پیدا نشد", 404
+
+
+if __name__ == "__main__":
+    init_db()
+
+    app.run(
+        host="127.0.0.1",
+        port=5002,
+        debug=True
+    )

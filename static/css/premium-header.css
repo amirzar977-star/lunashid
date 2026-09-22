@@ -1,0 +1,448 @@
+﻿/* =====================================================
+   LUNASHID — PREMIUM DARK GREEN GLASS HEADER
+   ===================================================== */
+
+.lux-header{
+    width:100%;
+    padding:22px 0;
+    position:relative !important;
+    z-index:100;
+}
+
+/* MAIN GLASS */
+
+.lux-header-inner{
+    width:min(1180px, calc(100% - 34px));
+    height:82px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+
+    padding:7px 9px 7px 22px;
+
+    position:relative !important;
+    overflow:hidden;
+
+    border-radius:28px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(4,45,33,.62),
+            rgba(12,76,55,.22),
+            rgba(255,255,255,.055),
+            rgba(2,31,23,.48)
+        ) !important;
+
+    border:1px solid rgba(190,255,225,.46) !important;
+
+    backdrop-filter:
+        blur(18px)
+        saturate(190%)
+        contrast(110%);
+
+    -webkit-backdrop-filter:
+        blur(18px)
+        saturate(190%)
+        contrast(110%);
+
+    box-shadow:
+        0 25px 75px rgba(0,0,0,.30),
+        0 0 45px rgba(31,130,91,.16),
+        inset 0 1px 0 rgba(255,255,255,.78),
+        inset 0 -1px 0 rgba(0,0,0,.18),
+        inset 1px 0 0 rgba(255,255,255,.20),
+        inset -1px 0 0 rgba(255,255,255,.08);
+}
+
+/* GLASS REFLECTION */
+
+.lux-header-inner::before{
+    content:"";
+    position:absolute;
+
+    width:70%;
+    height:220%;
+
+    top:-125%;
+    left:-20%;
+
+    transform:rotate(25deg);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255,255,255,.03) 30%,
+            rgba(255,255,255,.19) 48%,
+            rgba(123,255,190,.07) 55%,
+            transparent 72%
+        );
+
+    pointer-events:none;
+
+    animation:glassReflection 7s ease-in-out infinite;
+}
+
+@keyframes glassReflection{
+
+    0%,100%{
+        transform:translateX(-8%) rotate(25deg);
+    }
+
+    50%{
+        transform:translateX(45%) rotate(25deg);
+    }
+}
+
+/* TOP CRYSTAL LINE */
+
+.lux-header-inner::after{
+    content:"";
+
+    position:absolute;
+
+    left:8%;
+    right:8%;
+    top:0;
+
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.9),
+            rgba(143,255,202,.55),
+            rgba(255,255,255,.9),
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px rgba(151,255,205,.45);
+
+    pointer-events:none;
+}
+
+/* =====================================================
+   BRAND
+   ===================================================== */
+
+.lux-brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+
+    position:relative;
+    z-index:5;
+}
+
+/* LOGO */
+
+.lux-logo{
+    width:50px;
+    height:50px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(74,169,125,.30),
+            rgba(255,255,255,.055)
+        );
+
+    border:1px solid rgba(207,255,231,.52);
+
+    color:#f3fff9;
+
+    font-family:Georgia,serif;
+    font-size:24px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.82),
+        inset 0 -8px 18px rgba(0,35,25,.12),
+        0 0 28px rgba(66,176,126,.20),
+        0 12px 32px rgba(0,0,0,.22);
+
+    text-shadow:
+        0 0 14px rgba(191,255,220,.25);
+}
+
+/* BRAND TEXT */
+
+.lux-brand-name strong{
+    display:block;
+
+    color:#f4fff9;
+
+    font-size:17px;
+    letter-spacing:3px;
+
+    text-shadow:
+        0 2px 15px rgba(0,0,0,.25),
+        0 0 18px rgba(133,255,197,.12);
+}
+
+.lux-brand-name small{
+    display:block;
+
+    margin-top:4px;
+
+    color:#acd0bf;
+
+    font-size:8px;
+    letter-spacing:2.4px;
+}
+
+/* =====================================================
+   NAV
+   ===================================================== */
+
+.lux-nav{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:5px;
+
+    position:relative;
+    z-index:5;
+
+    padding:5px;
+
+    border-radius:19px;
+
+    background:
+        rgba(0,30,22,.13);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.13);
+}
+
+/* NAV ITEM */
+
+.nav-item{
+    position:relative;
+
+    color:#d7eee3 !important;
+    text-decoration:none;
+
+    padding:11px 19px;
+
+    border-radius:14px;
+
+    border:1px solid transparent;
+
+    transition:
+        .25s ease;
+
+    white-space:nowrap;
+}
+
+/* ACTIVE */
+
+.nav-item.active{
+    color:#ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(59,153,111,.30),
+            rgba(255,255,255,.055)
+        ) !important;
+
+    border-color:
+        rgba(193,255,221,.30);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.52),
+        0 0 20px rgba(54,156,111,.12);
+}
+
+/* HOVER */
+
+.nav-item:hover{
+    color:#ffffff !important;
+
+    background:
+        rgba(75,170,126,.16) !important;
+
+    border-color:
+        rgba(190,255,220,.24);
+
+    transform:translateY(-1px);
+}
+
+/* =====================================================
+   RIGHT ACTIONS
+   ===================================================== */
+
+.lux-actions{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+    gap:9px;
+
+    position:relative;
+    z-index:5;
+}
+
+/* GLASS BUTTON */
+
+.glass-action{
+    width:47px;
+    height:47px;
+
+    display:grid;
+    place-items:center;
+
+    position:relative;
+
+    color:#eafff4 !important;
+
+    text-decoration:none;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(71,166,122,.20),
+            rgba(255,255,255,.045)
+        ) !important;
+
+    border:
+        1px solid rgba(201,255,228,.38) !important;
+
+    backdrop-filter:
+        blur(10px)
+        saturate(180%);
+
+    -webkit-backdrop-filter:
+        blur(10px)
+        saturate(180%);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.62),
+        0 9px 28px rgba(0,0,0,.20);
+
+    transition:.25s ease;
+}
+
+.glass-action:hover{
+    transform:
+        translateY(-3px)
+        scale(1.04);
+
+    background:
+        rgba(73,174,128,.28) !important;
+
+    border-color:
+        rgba(211,255,233,.60) !important;
+
+    box-shadow:
+        0 0 28px rgba(54,164,117,.24),
+        inset 0 1px 0 rgba(255,255,255,.76);
+}
+
+/* =====================================================
+   CART BADGE
+   ===================================================== */
+
+.cart-count{
+    position:absolute;
+
+    top:-5px;
+    right:-5px;
+
+    min-width:18px;
+    height:18px;
+
+    padding:0 5px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50px;
+
+    color:#ffffff;
+
+    font-size:10px;
+    font-weight:700;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3c9d72,
+            #174f3b
+        ) !important;
+
+    border:
+        1px solid rgba(220,255,237,.58);
+
+    box-shadow:
+        0 0 15px rgba(58,170,120,.30);
+}
+
+/* =====================================================
+   IMAGE PICKER
+   ===================================================== */
+
+.image-action{
+    cursor:pointer;
+}
+
+.image-action input{
+    cursor:pointer;
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media(max-width:800px){
+
+    .lux-header{
+        padding:14px 0;
+    }
+
+    .lux-header-inner{
+        width:calc(100% - 22px);
+        height:70px;
+
+        padding:6px 7px 6px 12px;
+
+        grid-template-columns:1fr auto;
+
+        border-radius:22px;
+    }
+
+    .lux-brand-name small{
+        display:none;
+    }
+
+    .lux-logo{
+        width:43px;
+        height:43px;
+    }
+
+    .lux-nav{
+        display:none;
+    }
+
+    .glass-action{
+        width:42px;
+        height:42px;
+    }
+}

@@ -1,0 +1,142 @@
+﻿{% extends "base.html" %}
+
+{% block title %}سفارش ثبت شد | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+.success-page{
+    max-width:760px;
+    margin:100px auto;
+    padding:25px;
+    direction:rtl;
+    text-align:center;
+}
+
+.success-card{
+    padding:55px 35px;
+    border-radius:35px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(15px) saturate(160%);
+}
+
+.success-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(150,190,130,.16);
+    font-size:35px;
+}
+
+.success-card h1{
+    font-size:38px;
+    margin-bottom:15px;
+}
+
+.success-card p{
+    color:#666;
+    line-height:2;
+}
+
+.order-number{
+    margin:25px 0;
+    padding:18px;
+    border-radius:18px;
+    background:rgba(255,255,255,.3);
+}
+
+.order-number strong{
+    color:#A91D3A;
+}
+
+.success-actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+.success-actions a{
+    padding:14px 24px;
+    border-radius:15px;
+    text-decoration:none;
+}
+
+.primary{
+    background:#A91D3A;
+    color:white;
+}
+
+.secondary{
+    background:rgba(255,255,255,.3);
+    color:#444;
+}
+</style>
+
+<section class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h1>
+            سفارش شما ثبت شد
+        </h1>
+
+        <p>
+            ممنون که لوناشید را انتخاب کردید.
+            سفارش شما با موفقیت در سیستم ثبت شد.
+        </p>
+
+        <div class="order-number">
+
+            شماره سفارش:
+
+            <strong>
+                #{{ order.id }}
+            </strong>
+
+        </div>
+
+        <p>
+            وضعیت سفارش:
+            <strong>{{ order.status }}</strong>
+        </p>
+
+        <div class="success-actions">
+
+            <a
+                class="primary"
+                href="{{ url_for('products') }}"
+            >
+                ادامه خرید
+            </a>
+
+            <a
+                class="secondary"
+                href="{{ url_for('home') }}"
+            >
+                بازگشت به خانه
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+

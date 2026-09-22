@@ -1,0 +1,569 @@
+﻿{% extends "base.html" %}
+
+{% block title %}پیگیری سفارش | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+
+.track-page{
+    max-width:900px;
+    margin:75px auto;
+    padding:25px;
+    direction:rtl;
+}
+
+.track-header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.track-header span{
+    color:#A91D3A;
+    font-size:13px;
+    letter-spacing:2px;
+}
+
+.track-header h1{
+    font-size:42px;
+    margin:10px 0;
+}
+
+.track-header p{
+    color:#777;
+    line-height:2;
+}
+
+.track-form{
+    padding:30px;
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(14px) saturate(160%);
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr auto;
+    gap:15px;
+    align-items:end;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.form-group label{
+    font-size:14px;
+    color:#555;
+}
+
+.form-group input{
+    box-sizing:border-box;
+    width:100%;
+    padding:15px;
+    border-radius:15px;
+    border:1px solid rgba(0,0,0,.09);
+    background:rgba(255,255,255,.4);
+    font-family:inherit;
+    outline:none;
+}
+
+.form-group input:focus{
+    border-color:#A91D3A;
+}
+
+.track-button{
+    padding:15px 25px;
+    border:0;
+    border-radius:15px;
+    background:#A91D3A;
+    color:white;
+    font-family:inherit;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.track-error{
+    margin-top:18px;
+    padding:15px 18px;
+    border-radius:15px;
+    background:rgba(169,29,58,.08);
+    color:#A91D3A;
+    text-align:center;
+}
+
+.order-result{
+    margin-top:25px;
+    padding:30px;
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.025);
+    backdrop-filter:blur(14px) saturate(160%);
+}
+
+.order-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    padding-bottom:25px;
+    border-bottom:1px solid rgba(0,0,0,.07);
+}
+
+.order-number{
+    font-size:25px;
+    font-weight:900;
+}
+
+.order-date{
+    color:#888;
+    font-size:13px;
+    margin-top:7px;
+}
+
+.status{
+    padding:10px 17px;
+    border-radius:999px;
+    background:rgba(169,29,58,.08);
+    color:#A91D3A;
+    font-weight:700;
+}
+
+.progress{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin:30px 0;
+}
+
+.progress-step{
+    text-align:center;
+    position:relative;
+}
+
+.progress-dot{
+    width:40px;
+    height:40px;
+    margin:0 auto 10px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.06);
+    color:#888;
+}
+
+.progress-label{
+    font-size:12px;
+    color:#888;
+}
+
+.progress-step.active .progress-dot{
+    background:#A91D3A;
+    color:white;
+}
+
+.progress-step.active .progress-label{
+    color:#A91D3A;
+    font-weight:700;
+}
+
+.order-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.info-card{
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,.2);
+}
+
+.info-card h3{
+    margin-top:0;
+}
+
+.info-row{
+    display:flex;
+    gap:10px;
+    margin:10px 0;
+    color:#666;
+}
+
+.info-row strong{
+    color:#222;
+}
+
+.items{
+    margin-top:20px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    padding:15px 0;
+    border-bottom:1px solid rgba(0,0,0,.06);
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-name{
+    font-weight:700;
+}
+
+.item-meta{
+    color:#888;
+    font-size:13px;
+    margin-top:5px;
+}
+
+.item-price{
+    white-space:nowrap;
+    font-weight:700;
+}
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px solid rgba(0,0,0,.08);
+    font-size:23px;
+    font-weight:900;
+    color:#A91D3A;
+}
+
+@media(max-width:750px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .track-button{
+        width:100%;
+    }
+
+    .order-head{
+        display:block;
+    }
+
+    .status{
+        display:inline-block;
+        margin-top:15px;
+    }
+
+    .order-info{
+        grid-template-columns:1fr;
+    }
+
+    .progress-label{
+        font-size:10px;
+    }
+
+}
+
+</style>
+
+
+<section class="track-page">
+
+    <header class="track-header">
+
+        <span>ORDER TRACKING</span>
+
+        <h1>
+            پیگیری سفارش
+        </h1>
+
+        <p>
+            شماره سفارش خود را وارد کنید تا آخرین وضعیت سفارشتان را ببینید.
+        </p>
+
+    </header>
+
+
+    <form
+        class="track-form"
+        method="POST"
+        action="{{ url_for('track_order') }}"
+    >
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    شماره سفارش
+                </label>
+
+                <input
+                    type="number"
+                    name="order_id"
+                    placeholder="مثلاً 12"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    شماره تماس
+                </label>
+
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="مثلاً 0912..."
+                >
+
+            </div>
+
+
+            <button
+                class="track-button"
+                type="submit"
+            >
+                پیگیری سفارش
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if error %}
+
+    <div class="track-error">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+
+    {% if order %}
+
+    {% set status = order.status %}
+
+    <section class="order-result">
+
+        <div class="order-head">
+
+            <div>
+
+                <div class="order-number">
+                    سفارش #{{ order.id }}
+                </div>
+
+                <div class="order-date">
+                    {{ order.created_at }}
+                </div>
+
+            </div>
+
+            <div class="status">
+                {{ order.status }}
+            </div>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div class="
+                progress-step
+                {% if status in ['جدید','در حال آماده‌سازی','ارسال شده','تکمیل شده'] %}
+                active
+                {% endif %}
+            ">
+
+                <div class="progress-dot">
+                    1
+                </div>
+
+                <div class="progress-label">
+                    ثبت سفارش
+                </div>
+
+            </div>
+
+
+            <div class="
+                progress-step
+                {% if status in ['در حال آماده‌سازی','ارسال شده','تکمیل شده'] %}
+                active
+                {% endif %}
+            ">
+
+                <div class="progress-dot">
+                    2
+                </div>
+
+                <div class="progress-label">
+                    آماده‌سازی
+                </div>
+
+            </div>
+
+
+            <div class="
+                progress-step
+                {% if status in ['ارسال شده','تکمیل شده'] %}
+                active
+                {% endif %}
+            ">
+
+                <div class="progress-dot">
+                    3
+                </div>
+
+                <div class="progress-label">
+                    ارسال
+                </div>
+
+            </div>
+
+
+            <div class="
+                progress-step
+                {% if status == 'تکمیل شده' %}
+                active
+                {% endif %}
+            ">
+
+                <div class="progress-dot">
+                    4
+                </div>
+
+                <div class="progress-label">
+                    تکمیل
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="order-info">
+
+            <div class="info-card">
+
+                <h3>
+                    اطلاعات مشتری
+                </h3>
+
+                <div class="info-row">
+
+                    <strong>
+                        نام:
+                    </strong>
+
+                    <span>
+                        {{ order.customer_name }}
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <strong>
+                        تلفن:
+                    </strong>
+
+                    <span>
+                        {{ order.phone }}
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <strong>
+                        آدرس:
+                    </strong>
+
+                    <span>
+                        {{ order.address }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>
+                    محصولات سفارش
+                </h3>
+
+                {% set data = order.items|fromjson %}
+
+                <div class="items">
+
+                    {% for item in data.items %}
+
+                    <div class="item">
+
+                        <div>
+
+                            <div class="item-name">
+                                {{ item.name }}
+                            </div>
+
+                            <div class="item-meta">
+                                تعداد: {{ item.quantity }}
+                            </div>
+
+                        </div>
+
+                        <div class="item-price">
+                            {{ "{:,}".format(item.subtotal) }}
+                            تومان
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="total">
+
+            <span>
+                مبلغ کل
+            </span>
+
+            <span>
+                {{ "{:,}".format(order.total) }}
+                تومان
+            </span>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+

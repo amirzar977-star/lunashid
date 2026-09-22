@@ -1,0 +1,28 @@
+﻿{% extends "base.html" %}
+
+{% block title %}پیام ارسال شد{% endblock %}
+
+{% block content %}
+
+<section class="section-page center-page">
+
+    <div class="glass-panel success-card">
+
+        <span class="success-icon">✓</span>
+
+        <h1>پیام شما ارسال شد</h1>
+
+        <p>
+            پیام شما با موفقیت ثبت شد.
+            در اولین فرصت بررسی خواهد شد.
+        </p>
+
+        <a class="glass-button" href="{{ url_for('home') }}">
+            بازگشت به صفحه اصلی
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

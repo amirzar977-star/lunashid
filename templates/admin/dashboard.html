@@ -1,0 +1,38 @@
+﻿{% extends "admin/base.html" %}
+{% block title %}داشبورد{% endblock %}
+
+{% block content %}
+
+<div class="admin-head">
+    <span>OVERVIEW</span>
+    <h1>داشبورد</h1>
+    <p>نمای کلی فروشگاه Lunashid</p>
+</div>
+
+<div class="stats">
+
+<div class="stat glass">
+    <small>محصولات</small>
+    <strong>{{ stats.products }}</strong>
+</div>
+
+<div class="stat glass">
+    <small>کاربران</small>
+    <strong>{{ stats.users }}</strong>
+</div>
+
+<div class="stat glass">
+    <small>سفارش‌ها</small>
+    <strong>{{ stats.orders }}</strong>
+</div>
+
+<div class="stat glass">
+    <small>پیام‌های جدید</small>
+    <strong>{{ stats.messages }}</strong>
+</div>
+
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,68 @@
+﻿{% set hero_image = settings.get("hero_image", "") if settings is defined else "" %}
+
+<div class="hero-image-manager">
+
+    <div class="hero-image-preview">
+
+        {% if hero_image %}
+
+            <img
+                src="{{ url_for('static', filename='uploads/hero/' + hero_image) }}"
+                alt="Hero"
+            >
+
+        {% else %}
+
+            <div class="hero-image-empty">
+                <strong>تصویر هیرو انتخاب نشده</strong>
+                <span>یک تصویر برای بخش اصلی صفحه انتخاب کنید.</span>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="hero-image-controls">
+
+        <h3>تصویر بخش اصلی سایت</h3>
+
+        <p>
+            این تصویر در سمت چپ/کنار متن اصلی صفحه خانه
+            نمایش داده می‌شود.
+        </p>
+
+        <form
+            method="POST"
+            action="{{ url_for('admin_customize') }}"
+            enctype="multipart/form-data"
+        >
+
+            <input
+                class="hero-upload"
+                type="file"
+                name="hero_image"
+                accept="image/png,image/jpeg,image/webp"
+            >
+
+            <button
+                type="submit"
+                class="admin-btn primary"
+                style="margin-top:15px;width:100%;"
+            >
+                ذخیره تصویر هیرو
+            </button>
+
+        </form>
+
+        {% if hero_image %}
+            <div class="hero-current-file">
+                تصویر فعلی: {{ hero_image }}
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+

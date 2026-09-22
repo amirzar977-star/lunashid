@@ -1,0 +1,57 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+
+<section class="about-page">
+
+    <div class="about-hero glass">
+        <div class="about-text">
+            <span class="eyebrow">LUNASHID</span>
+
+            <h1>درباره ما</h1>
+
+            <p class="about-lead">
+                سفال‌هایی برای زندگی روزمره،
+                با روحی متفاوت.
+            </p>
+
+            <p>
+                ما در لوناشید تلاش می‌کنیم محصولات سفالی را
+                با ترکیبی از هنر، سادگی و حس زندگی روزمره ارائه کنیم.
+                هر قطعه با دقت انتخاب و آماده می‌شود تا فقط یک وسیله نباشد؛
+                بلکه بخشی از فضای زندگی شما باشد.
+            </p>
+        </div>
+
+        <div class="manager-card">
+            {% if site.manager_image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/manager/' ~ site.manager_image) }}"
+                    alt="مدیریت لوناشید"
+                    class="manager-image"
+                >
+            {% else %}
+                <div class="manager-empty">
+                    <span>عکس مدیریت</span>
+                </div>
+            {% endif %}
+
+            <div class="manager-info">
+                <span>مدیریت</span>
+                <h2>مدیریت لوناشید</h2>
+                <p>خلق تجربه‌ای متفاوت از سفال و هنر دست</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+
+

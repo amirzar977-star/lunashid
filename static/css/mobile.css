@@ -1,0 +1,679 @@
+﻿/* =========================================================
+   LUNASHID MOBILE EXPERIENCE
+   ========================================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    width:100%;
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+}
+
+body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+}
+
+/* images */
+
+img{
+    max-width:100%;
+}
+
+video,
+iframe{
+    max-width:100%;
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+   ========================================================= */
+
+@media (max-width: 760px){
+
+    .header{
+        width:100%;
+        max-width:100%;
+        padding:12px 14px !important;
+        margin:0 !important;
+    }
+
+    .header-inner{
+        min-height:58px;
+        padding:8px 12px !important;
+        border-radius:20px;
+    }
+
+    .header nav{
+        display:none !important;
+    }
+
+    .header-actions{
+        gap:7px !important;
+    }
+
+    .header-actions a{
+        min-width:40px;
+        min-height:40px;
+        padding:9px !important;
+    }
+
+    .logo{
+        font-size:1.15rem !important;
+    }
+
+    .mobile-menu-button{
+        display:flex !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.mobile-menu-button{
+    display:none;
+    width:42px;
+    height:42px;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.06);
+    color:inherit;
+    cursor:pointer;
+}
+
+.mobile-menu-button span{
+    width:20px;
+    height:2px;
+    background:currentColor;
+    position:relative;
+}
+
+.mobile-menu-button span::before,
+.mobile-menu-button span::after{
+    content:"";
+    position:absolute;
+    left:0;
+    width:20px;
+    height:2px;
+    background:currentColor;
+}
+
+.mobile-menu-button span::before{
+    top:-7px;
+}
+
+.mobile-menu-button span::after{
+    top:7px;
+}
+
+
+.mobile-menu{
+    display:none;
+}
+
+@media(max-width:760px){
+
+    .mobile-menu{
+        position:fixed;
+        top:74px;
+        left:12px;
+        right:12px;
+        z-index:9999;
+        padding:16px;
+        border-radius:25px;
+        border:1px solid rgba(255,255,255,.2);
+        background:rgba(245,245,240,.88);
+        backdrop-filter:blur(24px) saturate(150%);
+        -webkit-backdrop-filter:blur(24px) saturate(150%);
+        box-shadow:0 20px 60px rgba(0,0,0,.15);
+    }
+
+    .mobile-menu.open{
+        display:grid;
+        gap:7px;
+    }
+
+    .mobile-menu a{
+        display:block;
+        padding:15px 17px;
+        border-radius:16px;
+        color:inherit;
+        text-decoration:none;
+        background:rgba(255,255,255,.35);
+    }
+
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .hero{
+        min-height:620px !important;
+        padding:70px 18px 50px !important;
+    }
+
+    .hero-content{
+        width:100% !important;
+        max-width:100% !important;
+        text-align:center !important;
+    }
+
+    .hero h1{
+        font-size:clamp(2.3rem,12vw,4rem) !important;
+        line-height:1.05 !important;
+        letter-spacing:-.05em !important;
+    }
+
+    .hero p{
+        font-size:.98rem !important;
+        line-height:2 !important;
+    }
+
+    .hero-actions{
+        width:100%;
+        flex-direction:column !important;
+    }
+
+    .hero-actions a,
+    .hero-actions button{
+        width:100% !important;
+        min-height:52px;
+    }
+
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+@media(max-width:760px){
+
+    main{
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
+    }
+
+    .section,
+    .section-page{
+        width:calc(100% - 28px) !important;
+        max-width:none !important;
+        margin-left:14px !important;
+        margin-right:14px !important;
+        padding:55px 0 75px !important;
+    }
+
+    .page-heading{
+        margin-bottom:30px !important;
+    }
+
+    .page-heading h1{
+        font-size:2.2rem !important;
+    }
+
+    .page-heading p{
+        font-size:.9rem;
+        line-height:2;
+    }
+
+}
+
+
+/* =========================================================
+   PRODUCT COLLECTION
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .products-grid,
+    .product-grid,
+    .collection-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:10px !important;
+    }
+
+    .product-card{
+        min-width:0 !important;
+        border-radius:20px !important;
+        overflow:hidden;
+    }
+
+    .product-card img{
+        width:100%;
+        height:170px !important;
+        object-fit:cover;
+    }
+
+    .product-card-content{
+        padding:14px !important;
+    }
+
+    .product-card h2,
+    .product-card h3{
+        font-size:.92rem !important;
+        line-height:1.5;
+    }
+
+    .product-card p{
+        font-size:.78rem;
+    }
+
+    .product-price{
+        font-size:.9rem !important;
+    }
+
+    .product-card .glass-button{
+        width:100%;
+        padding:10px !important;
+        font-size:.78rem;
+    }
+
+}
+
+
+/* very small phones */
+
+@media(max-width:390px){
+
+    .products-grid,
+    .product-grid,
+    .collection-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .product-card img{
+        height:220px !important;
+    }
+
+}
+
+
+/* =========================================================
+   PRODUCT DETAIL
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .product-detail,
+    .product-page,
+    .product-layout{
+        grid-template-columns:1fr !important;
+        gap:18px !important;
+    }
+
+    .product-main-image,
+    .product-detail img{
+        max-height:420px;
+        object-fit:cover;
+        border-radius:24px;
+    }
+
+    .product-info{
+        padding:22px !important;
+    }
+
+    .product-info h1{
+        font-size:2rem !important;
+    }
+
+    .quantity-control{
+        width:100%;
+    }
+
+    .quantity-control input{
+        flex:1;
+        min-width:0;
+    }
+
+}
+
+
+/* =========================================================
+   FILTER / EXPLORER
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .explorer-bar,
+    .filter-bar,
+    .product-filters{
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        gap:10px !important;
+        padding:16px !important;
+    }
+
+    .explorer-bar select,
+    .explorer-bar input,
+    .filter-bar select,
+    .filter-bar input{
+        width:100% !important;
+        min-height:48px;
+    }
+
+}
+
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .cart-layout{
+        grid-template-columns:1fr !important;
+        gap:15px !important;
+    }
+
+    .cart-item{
+        grid-template-columns:72px 1fr auto !important;
+        gap:10px !important;
+        padding:12px !important;
+    }
+
+    .cart-item img{
+        width:72px !important;
+        height:72px !important;
+        border-radius:15px;
+        object-fit:cover;
+    }
+
+    .cart-item h3{
+        font-size:.9rem;
+    }
+
+    .cart-item .quantity{
+        width:45px;
+    }
+
+    .cart-summary{
+        padding:20px !important;
+    }
+
+    .cart-summary .glass-button{
+        width:100%;
+    }
+
+}
+
+
+/* =========================================================
+   MINI CART
+   ========================================================= */
+
+@media(max-width:600px){
+
+    .mini-cart{
+        width:100% !important;
+        max-width:100% !important;
+        right:0 !important;
+        top:0 !important;
+        bottom:0 !important;
+        border-radius:0 !important;
+    }
+
+    .mini-cart-item{
+        grid-template-columns:58px 1fr auto !important;
+    }
+
+}
+
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .checkout-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .checkout-form,
+    .checkout-summary{
+        padding:20px !important;
+    }
+
+    .checkout-form input,
+    .checkout-form textarea,
+    .checkout-form select{
+        width:100% !important;
+        min-height:50px;
+    }
+
+}
+
+
+/* =========================================================
+   ABOUT / SERVICES / MAGAZINE
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .about-grid,
+    .service-grid,
+    .magazine-grid,
+    .contact-grid,
+    .profile-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .about-text,
+    .contact-info,
+    .contact-form,
+    .article-single,
+    .legal-content{
+        padding:25px !important;
+    }
+
+    .manager-card{
+        min-height:auto !important;
+    }
+
+    .manager-image{
+        height:280px !important;
+    }
+
+    .about-values{
+        grid-template-columns:1fr !important;
+    }
+
+    .service-card{
+        min-height:auto !important;
+    }
+
+}
+
+
+/* =========================================================
+   CONTACT
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .contact-form input,
+    .contact-form textarea{
+        font-size:16px !important;
+    }
+
+    .contact-form button{
+        width:100%;
+        min-height:52px;
+    }
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .profile-card{
+        padding:30px 20px !important;
+    }
+
+    .profile-order{
+        grid-template-columns:1fr !important;
+        gap:7px !important;
+    }
+
+}
+
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .faq-item summary{
+        padding:20px !important;
+        font-size:.92rem;
+        line-height:1.8;
+    }
+
+    .faq-item p{
+        padding:0 20px 22px !important;
+        font-size:.9rem;
+    }
+
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .lunashid-footer{
+        width:calc(100% - 28px) !important;
+        margin:20px 14px 25px !important;
+        padding:25px !important;
+        border-radius:25px !important;
+    }
+
+    .footer-main{
+        grid-template-columns:1fr !important;
+        gap:30px !important;
+    }
+
+    .footer-links{
+        grid-template-columns:1fr 1fr !important;
+        gap:20px !important;
+    }
+
+    .footer-bottom{
+        flex-direction:column !important;
+        line-height:1.8;
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN MOBILE
+   ========================================================= */
+
+@media(max-width:760px){
+
+    .admin-layout{
+        display:block !important;
+    }
+
+    .admin-sidebar{
+        position:relative !important;
+        width:100% !important;
+        height:auto !important;
+    }
+
+    .admin-content{
+        width:100% !important;
+        padding:18px !important;
+    }
+
+    .admin-grid,
+    .stats-grid,
+    .dashboard-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .admin-table-wrapper{
+        width:100%;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+}
+
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (pointer:coarse){
+
+    button,
+    a,
+    input,
+    select,
+    textarea{
+        touch-action:manipulation;
+    }
+
+    .glass-button,
+    button{
+        min-height:46px;
+    }
+
+}
+
+
+/* =========================================================
+   SAFE AREA
+   ========================================================= */
+
+@supports(padding:max(0px)){
+
+    body{
+        padding-left:max(0px, env(safe-area-inset-left));
+        padding-right:max(0px, env(safe-area-inset-right));
+    }
+
+}
+
+
+/* =========================================================
+   NO HORIZONTAL SCROLL
+   ========================================================= */
+
+@media(max-width:760px){
+
+    table{
+        min-width:650px;
+    }
+
+    pre,
+    code{
+        max-width:100%;
+        overflow-x:auto;
+    }
+
+}

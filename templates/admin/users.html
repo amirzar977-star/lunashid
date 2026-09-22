@@ -1,0 +1,38 @@
+﻿{% extends "admin/base.html" %}
+{% block title %}کاربران{% endblock %}
+
+{% block content %}
+
+<div class="admin-head">
+<span>USERS</span>
+<h1>کاربران</h1>
+</div>
+
+<div class="admin-table glass">
+
+<table>
+<tr>
+<th>نام</th>
+<th>تلفن</th>
+<th>ایمیل</th>
+<th>تاریخ</th>
+</tr>
+
+{% for user in users %}
+<tr>
+<td>{{ user.name }}</td>
+<td>{{ user.phone }}</td>
+<td>{{ user.email }}</td>
+<td>{{ user.created_at }}</td>
+</tr>
+{% else %}
+<tr><td colspan="4">کاربری ثبت نشده.</td></tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}مدیریت Lunashid{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+<aside class="admin-sidebar">
+
+<a href="{{ url_for('admin_dashboard') }}" class="admin-brand">
+    <strong>Lunashid</strong>
+    <small>مدیریت فروشگاه</small>
+</a>
+
+<a href="{{ url_for('admin_dashboard') }}">داشبورد</a>
+<a href="{{ url_for('admin_products') }}">محصولات</a>
+<a href="{{ url_for('admin_users') }}">کاربران</a>
+<a href="{{ url_for('admin_orders') }}">سفارش‌ها</a>
+<a href="{{ url_for('admin_chat') }}">پیام‌ها</a>
+<a href="{{ url_for('admin_customize') }}">ظاهر سایت</a>
+
+<hr>
+
+<a href="{{ url_for('home') }}" target="_blank">مشاهده سایت</a>
+<a class="logout" href="{{ url_for('admin_logout') }}">خروج</a>
+
+</aside>
+
+<main class="admin-main">
+
+{% with messages=get_flashed_messages(with_categories=true) %}
+{% for category,message in messages %}
+<div class="admin-alert">{{ message }}</div>
+{% endfor %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+</main>
+
+</div>
+
+</body>
+</html>
+
+

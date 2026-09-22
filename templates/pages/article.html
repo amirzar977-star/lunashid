@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ article.title }} | لوناشید{% endblock %}
+
+{% block content %}
+
+<section class="section-page">
+
+    <article class="glass-panel article-single">
+
+        <span class="article-tag">{{ article.tag }}</span>
+
+        <h1>{{ article.title }}</h1>
+
+        <div class="article-content">
+
+            {% for paragraph in article.content %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+
+        </div>
+
+        <a class="glass-button" href="{{ url_for('magazine') }}">
+            بازگشت به مجله
+        </a>
+
+    </article>
+
+</section>
+
+{% endblock %}

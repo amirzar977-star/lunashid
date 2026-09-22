@@ -1,0 +1,49 @@
+﻿{% extends "admin/base.html" %}
+
+{% block title %}گفت‌وگو{% endblock %}
+{% block heading %}گفت‌وگو با {{ user.name }}{% endblock %}
+
+{% block content %}
+
+<div class="conversation">
+
+<div class="messages">
+
+{% for message in messages %}
+
+<div class="message {% if message.sender == 'admin' %}admin-message{% endif %}">
+
+    <span>{{ message.text }}</span>
+    <small>{{ message.created_at }}</small>
+
+</div>
+
+{% else %}
+
+<div class="empty">
+    هنوز پیامی وجود ندارد.
+</div>
+
+{% endfor %}
+
+</div>
+
+<form method="POST" class="message-form">
+
+<input
+    name="text"
+    placeholder="پیامت را بنویس..."
+    autocomplete="off"
+    required>
+
+<button type="submit">
+    ارسال
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}
+
+

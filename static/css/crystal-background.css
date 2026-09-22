@@ -1,0 +1,75 @@
+﻿/* =========================================================
+   LUNASHID — CRYSTAL CLEAR BACKGROUND
+   ========================================================= */
+
+/* تصویر پس زمینه کاملاً واضح */
+#backgroundLayer {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    z-index: -10 !important;
+
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+
+    opacity: 1 !important;
+
+    filter: none !important;
+}
+
+/* حذف کامل لایه‌ای که تصویر را کدر می‌کرد */
+#backgroundLayer::after {
+    display: none !important;
+}
+
+/* حذف هر افکت روی کل صفحه */
+body::before {
+    display: none !important;
+}
+
+/* خود body دیگر تصویر را سفید نکند */
+body {
+    background: transparent !important;
+}
+
+/* گلس فقط روی بخش‌های سایت */
+.site-header,
+.hero-glass,
+.page-hero-glass,
+.product-card,
+.manifesto-glass,
+.product-detail-glass,
+.glass-panel {
+    backdrop-filter: blur(18px) saturate(135%);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+/* کارت‌ها شفاف‌تر تا تصویر پشتشان دیده شود */
+.product-card {
+    background: rgba(255,255,255,.20) !important;
+    border-color: rgba(255,255,255,.55) !important;
+}
+
+.hero-glass {
+    background: rgba(255,255,255,.20) !important;
+}
+
+.page-hero-glass {
+    background: rgba(255,255,255,.20) !important;
+}
+
+.manifesto-glass {
+    background: rgba(255,255,255,.20) !important;
+}
+
+/* یک انعکاس خیلی ظریف، نه کدری */
+.product-card::before,
+.hero-glass::before,
+.page-hero-glass::before,
+.manifesto-glass::before {
+    opacity: .12 !important;
+}

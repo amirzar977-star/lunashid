@@ -1,0 +1,206 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+{{ site_settings.site_name }} | سفال دست‌ساز
+{% endblock %}
+
+{% block content %}
+
+<section
+class="hero site-glass"
+style="
+padding:70px 45px;
+border-radius:32px;
+margin-bottom:28px;
+position:relative;
+overflow:hidden;
+">
+
+<div
+style="
+position:absolute;
+width:300px;
+height:300px;
+border-radius:50%;
+background:{{ site_settings.accent_color }};
+opacity:.10;
+filter:blur(90px);
+top:-180px;
+left:-100px;
+">
+</div>
+
+<div style="position:relative;z-index:2;max-width:760px">
+
+<div
+style="
+color:{{ site_settings.accent_color }};
+font-size:12px;
+letter-spacing:2px;
+margin-bottom:18px;
+">
+{{ site_settings.announcement }}
+</div>
+
+<h1
+style="
+font-size:clamp(35px,6vw,70px);
+line-height:1.2;
+margin:0 0 22px;
+">
+{{ site_settings.hero_title }}
+</h1>
+
+<p
+style="
+font-size:16px;
+line-height:2;
+color:rgba(255,255,255,.60);
+max-width:650px;
+">
+{{ site_settings.hero_text }}
+</p>
+
+<a
+href="/products"
+class="glass-button"
+style="
+display:inline-block;
+margin-top:18px;
+background:{{ site_settings.accent_color }};
+color:#09251d;
+font-weight:900;
+">
+مشاهده مجموعه
+</a>
+
+</div>
+
+</section>
+
+
+<section>
+
+<div
+style="
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin:25px 0 15px;
+">
+
+<h2>
+مجموعه محصولات
+</h2>
+
+<a
+href="/products"
+style="
+color:{{ site_settings.accent_color }};
+font-size:13px;
+">
+مشاهده همه ←
+</a>
+
+</div>
+
+
+<div
+style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:18px;
+">
+
+{% for p in products %}
+
+<article
+class="site-glass"
+style="
+border-radius:23px;
+overflow:hidden;
+">
+
+{% if p.image %}
+
+<img
+src="/static/uploads/products/{{ p.image }}"
+style="
+width:100%;
+height:270px;
+object-fit:cover;
+display:block;
+">
+
+{% else %}
+
+<div
+style="
+height:270px;
+display:grid;
+place-items:center;
+color:{{ site_settings.accent_color }};
+font-size:40px;
+">
+L
+</div>
+
+{% endif %}
+
+
+<div style="padding:20px">
+
+<div
+style="
+font-size:10px;
+color:{{ site_settings.accent_color }};
+margin-bottom:7px;
+">
+{{ p.category }}
+</div>
+
+<h3 style="margin:0 0 10px">
+{{ p.name }}
+</h3>
+
+<p
+style="
+color:rgba(255,255,255,.42);
+font-size:12px;
+line-height:1.8;
+">
+{{ p.description }}
+</p>
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+">
+
+<strong>
+{{ "{:,}".format(p.price) }} تومان
+</strong>
+
+<a
+href="/product/{{ p.id }}"
+class="glass-button"
+style="font-size:11px">
+مشاهده
+</a>
+
+</div>
+
+</div>
+
+</article>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+﻿{% extends "admin/base.html" %}
+{% block title %}ظاهر سایت{% endblock %}
+
+{% block content %}
+
+<div class="admin-head">
+<span>APPEARANCE</span>
+<h1>ظاهر سایت</h1>
+<p>همه چیز را از اینجا کنترل کن.</p>
+</div>
+
+<form method="POST" enctype="multipart/form-data"
+      enctype="multipart/form-data"
+      class="admin-form glass">
+
+<h2>اطلاعات اصلی</h2>
+
+<label>نام سایت</label>
+<input name="site_name" value="{{ site.site_name }}">
+
+<label>توضیح سایت</label>
+<input name="site_description" value="{{ site.site_description }}">
+
+<label>اعلان</label>
+<input name="announcement" value="{{ site.announcement }}">
+
+
+<h2>Hero</h2>
+
+<label>عنوان Hero</label>
+<textarea name="hero_title" rows="3">{{ site.hero_title }}</textarea>
+
+<label>متن Hero</label>
+<textarea name="hero_text" rows="4">{{ site.hero_text }}</textarea>
+
+<label>تصویر Hero</label>
+<input type="file" name="hero" accept="image/*">
+
+{% if site.hero_image %}
+
+<img class="preview"
+src="{{ url_for('static',filename='uploads/hero/' ~ site.hero_image) }}">
+
+<button
+type="submit"
+formaction="{{ url_for('admin_delete_hero') }}"
+class="delete-button">
+حذف Hero
+</button>
+
+{% endif %}
+
+
+<h2>Background</h2>
+
+<label>تصویر پس‌زمینه</label>
+<input type="file" name="background" accept="image/*">
+
+{% if site.background %}
+
+<img class="preview"
+src="{{ url_for('static',filename='uploads/backgrounds/' ~ site.background) }}">
+
+<button
+type="submit"
+formaction="{{ url_for('admin_delete_background') }}"
+class="delete-button">
+حذف Background
+</button>
+
+{% endif %}
+
+
+<h2>Glass</h2>
+
+<label>رنگ اصلی</label>
+<input name="primary_color" value="{{ site.primary_color }}">
+
+<label>شفافیت</label>
+<input name="glass_opacity" value="{{ site.glass_opacity }}">
+
+<label>Blur</label>
+<input name="glass_blur" value="{{ site.glass_blur }}">
+
+<button class="button primary">
+ذخیره تنظیمات
+</button>
+
+</form>
+
+{% endblock %}
+
+
+
+

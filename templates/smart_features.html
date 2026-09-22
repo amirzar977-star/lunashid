@@ -1,0 +1,1278 @@
+﻿<!-- =====================================================
+     LUNASHID SMART FEATURES
+===================================================== -->
+
+<div
+    id="smartSearch"
+    class="smart-search"
+>
+
+    <div
+        class="smart-search-backdrop"
+        onclick="closeSmartSearch()"
+    ></div>
+
+    <div class="smart-search-box">
+
+        <div class="smart-search-head">
+
+            <div>
+
+                <span>SEARCH LUNASHID</span>
+
+                <h2>
+                    جستجوی محصولات
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                onclick="closeSmartSearch()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <input
+            id="smartSearchInput"
+            type="search"
+            placeholder="نام محصول یا دسته‌بندی..."
+            autocomplete="off"
+            oninput="searchLunashid(this.value)"
+        >
+
+        <div
+            id="smartSearchResults"
+            class="smart-search-results"
+        >
+            عبارت موردنظر را جستجو کنید.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- QUICK VIEW -->
+
+<div
+    id="quickView"
+    class="quick-view"
+    onclick="closeQuickView(event)"
+>
+
+    <div class="quick-view-card">
+
+        <button
+            class="quick-view-close"
+            onclick="closeQuickView()"
+        >
+            ×
+        </button>
+
+        <img
+            id="quickViewImage"
+            src=""
+            alt=""
+        >
+
+        <div class="quick-view-content">
+
+            <span id="quickViewCategory"></span>
+
+            <h2 id="quickViewName"></h2>
+
+            <p id="quickViewDescription"></p>
+
+            <strong id="quickViewPrice"></strong>
+
+            <div
+                id="quickViewStock"
+                class="quick-view-stock"
+            ></div>
+
+            <div class="quick-view-actions">
+
+                <button
+                    id="quickViewCart"
+                    type="button"
+                >
+                    افزودن به سبد
+                </button>
+
+                <button
+                    id="quickViewWishlist"
+                    type="button"
+                    class="quick-wishlist-button"
+                >
+                    ♡ علاقه‌مندی
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- RECENT PRODUCTS -->
+
+<div
+    id="recentProducts"
+    class="recent-products"
+>
+
+    <div class="recent-products-head">
+
+        <div>
+
+            <span>
+                RECENTLY VIEWED
+            </span>
+
+            <h3>
+                اخیراً دیده‌شده
+            </h3>
+
+        </div>
+
+        <button
+            onclick="clearRecentProducts()"
+        >
+            پاک کردن
+        </button>
+
+    </div>
+
+    <div
+        id="recentProductsList"
+        class="recent-products-list"
+    ></div>
+
+</div>
+
+
+<!-- FLOATING SMART BUTTONS -->
+
+<div class="smart-floating">
+
+    <button
+        type="button"
+        onclick="openSmartSearch()"
+        title="جستجو"
+    >
+        ⌕
+    </button>
+
+    <button
+        type="button"
+        onclick="openRecentProducts()"
+        title="اخیراً دیده‌شده"
+    >
+        ◷
+    </button>
+
+</div>
+
+
+<style>
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.smart-search{
+    position:fixed;
+    inset:0;
+    z-index:11000;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.smart-search.open{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.smart-search-backdrop{
+    position:absolute;
+    inset:0;
+
+    background:rgba(20,25,20,.20);
+
+    backdrop-filter:blur(10px);
+}
+
+.smart-search-box{
+    position:absolute;
+
+    top:8vh;
+    left:50%;
+
+    width:min(720px,92vw);
+    max-height:80vh;
+
+    transform:
+        translateX(-50%)
+        translateY(-20px);
+
+    overflow:hidden;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.48);
+
+    border:
+        1px solid
+        rgba(255,255,255,.65);
+
+    backdrop-filter:
+        blur(30px)
+        saturate(170%);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.16);
+
+    transition:.3s;
+}
+
+.smart-search.open .smart-search-box{
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+.smart-search-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:25px;
+}
+
+.smart-search-head span{
+    color:#A91D3A;
+    font-size:10px;
+    letter-spacing:3px;
+}
+
+.smart-search-head h2{
+    margin:7px 0 0;
+}
+
+.smart-search-head button{
+    width:42px;
+    height:42px;
+
+    border:0;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.35);
+
+    font-size:24px;
+
+    cursor:pointer;
+}
+
+#smartSearchInput{
+    width:calc(100% - 40px);
+
+    margin:0 20px 20px;
+
+    box-sizing:border-box;
+
+    border:1px solid rgba(255,255,255,.6);
+
+    border-radius:18px;
+
+    padding:16px 18px;
+
+    outline:none;
+
+    background:rgba(255,255,255,.3);
+
+    font-family:inherit;
+    font-size:15px;
+}
+
+.smart-search-results{
+    max-height:52vh;
+    overflow-y:auto;
+
+    padding:0 20px 20px;
+}
+
+.search-result{
+    display:grid;
+
+    grid-template-columns:70px 1fr auto;
+
+    gap:14px;
+    align-items:center;
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.22);
+
+    border:
+        1px solid
+        rgba(255,255,255,.35);
+}
+
+.search-result img{
+    width:70px;
+    height:70px;
+
+    object-fit:cover;
+
+    border-radius:14px;
+}
+
+.search-result h4{
+    margin:0 0 5px;
+}
+
+.search-result-price{
+    color:#A91D3A;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.search-result button{
+    border:0;
+    border-radius:12px;
+
+    padding:8px 10px;
+
+    background:#A91D3A;
+    color:#fff;
+
+    cursor:pointer;
+}
+
+
+/* =====================================================
+   QUICK VIEW
+===================================================== */
+
+.quick-view{
+    position:fixed;
+    inset:0;
+
+    z-index:11001;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(20,25,20,.25);
+
+    backdrop-filter:blur(10px);
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.quick-view.open{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.quick-view-card{
+    position:relative;
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    width:min(850px,94vw);
+
+    overflow:hidden;
+
+    border-radius:30px;
+
+    background:rgba(255,255,255,.48);
+
+    border:
+        1px solid
+        rgba(255,255,255,.65);
+
+    backdrop-filter:
+        blur(30px)
+        saturate(160%);
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.18);
+}
+
+.quick-view-card > img{
+    width:100%;
+    height:100%;
+    min-height:420px;
+
+    object-fit:cover;
+}
+
+.quick-view-content{
+    padding:38px;
+
+    direction:rtl;
+}
+
+.quick-view-content > span{
+    color:#A91D3A;
+    font-size:11px;
+}
+
+.quick-view-content h2{
+    font-size:30px;
+    margin:12px 0;
+}
+
+.quick-view-content p{
+    color:#777;
+    line-height:2;
+}
+
+.quick-view-content strong{
+    display:block;
+
+    margin:25px 0;
+
+    color:#A91D3A;
+
+    font-size:23px;
+}
+
+.quick-view-stock{
+    margin-bottom:20px;
+    font-size:13px;
+}
+
+.quick-view-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.quick-view-actions button{
+    border:0;
+
+    padding:14px 18px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+}
+
+#quickViewCart{
+    background:#A91D3A;
+    color:#fff;
+}
+
+.quick-wishlist-button{
+    background:rgba(255,255,255,.4);
+}
+
+.quick-view-close{
+    position:absolute;
+
+    top:15px;
+    right:15px;
+
+    width:42px;
+    height:42px;
+
+    border:0;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.5);
+
+    font-size:23px;
+
+    cursor:pointer;
+
+    z-index:2;
+}
+
+
+/* =====================================================
+   RECENT
+===================================================== */
+
+.recent-products{
+    position:fixed;
+
+    right:20px;
+    bottom:85px;
+
+    width:min(400px,calc(100vw - 40px));
+
+    max-height:65vh;
+
+    overflow:auto;
+
+    z-index:10990;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.45);
+
+    border:
+        1px solid
+        rgba(255,255,255,.6);
+
+    backdrop-filter:blur(25px);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.14);
+
+    transform:
+        translateY(20px)
+        scale(.96);
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.recent-products.open{
+    transform:
+        translateY(0)
+        scale(1);
+
+    opacity:1;
+    pointer-events:auto;
+}
+
+.recent-products-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.recent-products-head span{
+    color:#A91D3A;
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+.recent-products-head h3{
+    margin:5px 0 0;
+}
+
+.recent-products-head button{
+    border:0;
+    background:transparent;
+    color:#888;
+    cursor:pointer;
+}
+
+.recent-product{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:10px;
+
+    margin-bottom:8px;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,.2);
+
+    cursor:pointer;
+}
+
+.recent-product img{
+    width:58px;
+    height:58px;
+
+    border-radius:12px;
+
+    object-fit:cover;
+}
+
+.recent-product strong{
+    display:block;
+}
+
+.recent-product span{
+    color:#A91D3A;
+    font-size:12px;
+}
+
+
+/* =====================================================
+   FLOATING
+===================================================== */
+
+.smart-floating{
+    position:fixed;
+
+    left:20px;
+    bottom:20px;
+
+    z-index:10000;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:9px;
+}
+
+.smart-floating button{
+    width:48px;
+    height:48px;
+
+    border:1px solid rgba(255,255,255,.55);
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.28);
+
+    backdrop-filter:blur(15px);
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.smart-floating button:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.45);
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:650px){
+
+    .quick-view-card{
+        grid-template-columns:1fr;
+        max-height:90vh;
+        overflow:auto;
+    }
+
+    .quick-view-card > img{
+        min-height:250px;
+        max-height:300px;
+    }
+
+    .quick-view-content{
+        padding:25px;
+    }
+
+    .quick-view-content h2{
+        font-size:24px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function smartMoney(value){
+
+    return Number(value || 0)
+        .toLocaleString("fa-IR") +
+        " تومان";
+
+}
+
+
+function smartImage(image){
+
+    if(image){
+
+        return "/static/uploads/products/" +
+            image;
+
+    }
+
+    return "/static/uploads/products/no-image.svg";
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function openSmartSearch(){
+
+    const box =
+        document.getElementById(
+            "smartSearch"
+        );
+
+    box.classList.add("open");
+
+    setTimeout(() => {
+
+        document
+            .getElementById(
+                "smartSearchInput"
+            )
+            .focus();
+
+    },100);
+
+}
+
+
+function closeSmartSearch(){
+
+    document
+        .getElementById(
+            "smartSearch"
+        )
+        .classList.remove("open");
+
+}
+
+
+let searchTimer = null;
+
+
+async function searchLunashid(query){
+
+    clearTimeout(searchTimer);
+
+    const results =
+        document.getElementById(
+            "smartSearchResults"
+        );
+
+    if(!query.trim()){
+
+        results.innerHTML =
+            "عبارت موردنظر را جستجو کنید.";
+
+        return;
+
+    }
+
+    results.innerHTML =
+        "در حال جستجو...";
+
+    searchTimer =
+        setTimeout(
+            async () => {
+
+                try{
+
+                    const response =
+                        await fetch(
+                            "/api/search-products?q=" +
+                            encodeURIComponent(query)
+                        );
+
+                    const data =
+                        await response.json();
+
+                    if(!data.items.length){
+
+                        results.innerHTML =
+                            "محصولی پیدا نشد.";
+
+                        return;
+
+                    }
+
+                    results.innerHTML =
+                        data.items.map(
+                            product => `
+
+                            <div class="search-result">
+
+                                <img
+                                    src="${smartImage(product.image)}"
+                                    onerror="this.src='/static/uploads/products/no-image.svg'"
+                                >
+
+                                <div>
+
+                                    <h4>
+                                        ${product.name}
+                                    </h4>
+
+                                    <div>
+                                        ${product.category || ""}
+                                    </div>
+
+                                    <div class="search-result-price">
+                                        ${smartMoney(product.price)}
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <button
+                                        onclick="openQuickView(${product.id})"
+                                    >
+                                        مشاهده
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        `
+                        ).join("");
+
+                }catch(error){
+
+                    results.innerHTML =
+                        "خطا در جستجو.";
+
+                    console.error(error);
+
+                }
+
+            },
+            250
+        );
+
+}
+
+
+/* =====================================================
+   QUICK VIEW
+===================================================== */
+
+async function openQuickView(productId){
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/product-info/" +
+                productId
+            );
+
+        const data =
+            await response.json();
+
+        if(!data.ok){
+
+            return;
+
+        }
+
+        const p = data.product;
+
+        document
+            .getElementById(
+                "quickViewImage"
+            )
+            .src =
+                smartImage(p.image);
+
+        document
+            .getElementById(
+                "quickViewName"
+            )
+            .textContent =
+                p.name;
+
+        document
+            .getElementById(
+                "quickViewCategory"
+            )
+            .textContent =
+                p.category || "LUNASHID";
+
+        document
+            .getElementById(
+                "quickViewDescription"
+            )
+            .textContent =
+                p.description ||
+                "محصول دست‌ساز لوناشید.";
+
+        document
+            .getElementById(
+                "quickViewPrice"
+            )
+            .textContent =
+                smartMoney(p.price);
+
+        const stock =
+            document.getElementById(
+                "quickViewStock"
+            );
+
+        if(p.stock !== null && p.stock <= 0){
+
+            stock.textContent =
+                "ناموجود";
+
+            stock.style.color =
+                "#A91D3A";
+
+        }else{
+
+            stock.textContent =
+                p.stock === null
+                ? "موجود"
+                : "موجودی: " + p.stock;
+
+            stock.style.color =
+                "#5b8067";
+
+        }
+
+        document
+            .getElementById(
+                "quickViewCart"
+            )
+            .onclick = () => {
+
+                addToMiniCart(
+                    p.id
+                );
+
+            };
+
+        document
+            .getElementById(
+                "quickViewWishlist"
+            )
+            .onclick = () => {
+
+                toggleWishlist(
+                    p.id
+                );
+
+            };
+
+        document
+            .getElementById(
+                "quickView"
+            )
+            .classList.add("open");
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+function closeQuickView(event){
+
+    if(
+        event &&
+        event.target &&
+        event.target.id === "quickViewImage"
+    ){
+
+        return;
+
+    }
+
+    document
+        .getElementById(
+            "quickView"
+        )
+        .classList.remove("open");
+
+}
+
+
+/* =====================================================
+   WISHLIST
+===================================================== */
+
+async function toggleWishlist(productId){
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/wishlist/toggle/" +
+                productId,
+                {
+                    method:"POST"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(data.ok){
+
+            const button =
+                document.getElementById(
+                    "quickViewWishlist"
+                );
+
+            button.textContent =
+                data.active
+                ? "♥ ذخیره شد"
+                : "♡ علاقه‌مندی";
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =====================================================
+   RECENTLY VIEWED
+===================================================== */
+
+function getRecentProducts(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                "lunashid_recent"
+            ) || "[]"
+        );
+
+    }catch{
+
+        return [];
+
+    }
+
+}
+
+
+function saveRecentProduct(productId){
+
+    let items =
+        getRecentProducts();
+
+    items =
+        items.filter(
+            id => Number(id) !== Number(productId)
+        );
+
+    items.unshift(
+        Number(productId)
+    );
+
+    items =
+        items.slice(0,8);
+
+    localStorage.setItem(
+        "lunashid_recent",
+        JSON.stringify(items)
+    );
+
+}
+
+
+async function loadRecentProducts(){
+
+    const list =
+        document.getElementById(
+            "recentProductsList"
+        );
+
+    if(!list){
+
+        return;
+
+    }
+
+    const ids =
+        getRecentProducts();
+
+    if(!ids.length){
+
+        list.innerHTML =
+            "هنوز محصولی مشاهده نشده است.";
+
+        return;
+
+    }
+
+    list.innerHTML =
+        "در حال بارگذاری...";
+
+    const products = [];
+
+    for(const id of ids){
+
+        try{
+
+            const response =
+                await fetch(
+                    "/api/product-info/" +
+                    id
+                );
+
+            const data =
+                await response.json();
+
+            if(data.ok){
+
+                products.push(
+                    data.product
+                );
+
+            }
+
+        }catch{}
+
+    }
+
+    list.innerHTML =
+        products.map(
+            p => `
+
+            <div
+                class="recent-product"
+                onclick="openQuickView(${p.id})"
+            >
+
+                <img
+                    src="${smartImage(p.image)}"
+                    onerror="this.src='/static/uploads/products/no-image.svg'"
+                >
+
+                <div>
+
+                    <strong>
+                        ${p.name}
+                    </strong>
+
+                    <span>
+                        ${smartMoney(p.price)}
+                    </span>
+
+                </div>
+
+            </div>
+
+        `
+        ).join("");
+
+}
+
+
+function openRecentProducts(){
+
+    const panel =
+        document.getElementById(
+            "recentProducts"
+        );
+
+    panel.classList.toggle("open");
+
+    loadRecentProducts();
+
+}
+
+
+function clearRecentProducts(){
+
+    localStorage.removeItem(
+        "lunashid_recent"
+    );
+
+    loadRecentProducts();
+
+}
+
+
+/* =====================================================
+   تشخیص صفحه محصول
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const match =
+            window.location.pathname.match(
+                /^\/product\/(\d+)/
+            );
+
+        if(match){
+
+            saveRecentProduct(
+                Number(match[1])
+            );
+
+        }
+
+        loadRecentProducts();
+
+    }
+);
+
+
+/* =====================================================
+   ESC
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeSmartSearch();
+            closeQuickView();
+
+            document
+                .getElementById(
+                    "recentProducts"
+                )
+                ?.classList.remove("open");
+
+        }
+
+    }
+);
+
+</script>

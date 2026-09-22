@@ -1,0 +1,105 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+{{ product.name }} | {{ site_settings.site_name }}
+{% endblock %}
+
+{% block content %}
+
+<div
+class="site-glass"
+style="
+border-radius:30px;
+padding:25px;
+">
+
+<div
+style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+">
+
+<div>
+
+{% if images %}
+
+<img
+src="/static/uploads/products/{{ images[0].filename }}"
+style="
+width:100%;
+height:520px;
+object-fit:cover;
+border-radius:22px;
+">
+
+{% else %}
+
+<div
+style="
+height:520px;
+border-radius:22px;
+display:grid;
+place-items:center;
+background:rgba(255,255,255,.04);
+font-size:50px;
+color:{{ site_settings.accent_color }};
+">
+L
+</div>
+
+{% endif %}
+
+</div>
+
+
+<div style="padding:30px 10px">
+
+<div
+style="
+color:{{ site_settings.accent_color }};
+font-size:11px;
+">
+{{ product.category }}
+</div>
+
+<h1>
+{{ product.name }}
+</h1>
+
+<p
+style="
+color:rgba(255,255,255,.55);
+line-height:2;
+">
+{{ product.description }}
+</p>
+
+<div
+style="
+font-size:24px;
+font-weight:bold;
+margin:30px 0;
+">
+{{ "{:,}".format(product.price) }} تومان
+</div>
+
+<button
+class="glass-button"
+style="
+border:0;
+background:{{ site_settings.accent_color }};
+color:#09251d;
+font-weight:bold;
+cursor:pointer;
+">
+افزودن به سبد
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

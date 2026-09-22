@@ -1,0 +1,255 @@
+﻿{% extends "admin/base.html" %}
+
+{% block title %}محصول{% endblock %}
+
+{% block content %}
+
+<style>
+
+.product-editor{
+    max-width:850px;
+    margin:auto;
+    direction:rtl;
+}
+
+.editor-box{
+    padding:30px;
+    border-radius:28px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.3);
+    backdrop-filter:blur(15px);
+}
+
+.editor-box h1{
+    margin-top:0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+.field label{
+    font-size:14px;
+    color:#666;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.4);
+    border-radius:14px;
+    padding:14px;
+    font-family:inherit;
+    outline:none;
+}
+
+.field textarea{
+    min-height:150px;
+    resize:vertical;
+}
+
+.save{
+    margin-top:25px;
+    border:0;
+    padding:15px 30px;
+    border-radius:15px;
+    background:#A91D3A;
+    color:#fff;
+    font-family:inherit;
+    cursor:pointer;
+}
+
+.preview{
+    margin-top:20px;
+}
+
+.preview img{
+    max-width:250px;
+    max-height:250px;
+    border-radius:20px;
+    object-fit:cover;
+}
+
+@media(max-width:700px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+        grid-column:auto;
+    }
+}
+
+</style>
+
+<div class="product-editor">
+
+<div class="editor-box">
+
+<h1>
+{% if product %}
+ویرایش محصول
+{% else %}
+افزودن محصول جدید
+{% endif %}
+</h1>
+
+<form
+    method="POST"
+    enctype="multipart/form-data"
+>
+
+<div class="form-grid">
+
+<div class="field">
+
+<label>نام محصول</label>
+
+<input
+    type="text"
+    name="name"
+    value="{{ product.name if product else '' }}"
+    required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>قیمت</label>
+
+<input
+    type="number"
+    name="price"
+    min="0"
+    value="{{ product.price if product else '' }}"
+    required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>موجودی</label>
+
+<input
+    type="number"
+    name="stock"
+    min="0"
+    value="{{ product.stock if product else 0 }}"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>دسته‌بندی</label>
+
+<select name="category">
+
+<option value="سفال"
+{% if product and product.category == 'سفال' %}selected{% endif %}
+>
+سفال
+</option>
+
+<option value="ماگ"
+{% if product and product.category == 'ماگ' %}selected{% endif %}
+>
+ماگ
+</option>
+
+<option value="ظروف"
+{% if product and product.category == 'ظروف' %}selected{% endif %}
+>
+ظروف
+</option>
+
+<option value="دکوری"
+{% if product and product.category == 'دکوری' %}selected{% endif %}
+>
+دکوری
+</option>
+
+<option value="سایر"
+{% if product and product.category == 'سایر' %}selected{% endif %}
+>
+سایر
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field full">
+
+<label>توضیحات</label>
+
+<textarea name="description">{{ product.description if product else '' }}</textarea>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+تصویر اصلی محصول
+</label>
+
+<input
+    type="file"
+    name="image"
+    accept="image/*"
+>
+
+</div>
+
+</div>
+
+
+{% if product and product.image %}
+
+<div class="preview">
+
+<p>تصویر فعلی:</p>
+
+<img
+    src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+    alt="{{ product.name }}"
+>
+
+</div>
+
+{% endif %}
+
+
+<button class="save" type="submit">
+ذخیره محصول
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

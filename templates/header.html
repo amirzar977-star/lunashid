@@ -1,0 +1,59 @@
+﻿<header>
+
+    <nav>
+
+        <div class="logo">
+            <a href="/">Lunashid</a>
+        </div>
+
+        <ul class="menu">
+
+            <li><a href="/">Ø®Ø§Ù†Ù‡</a></li>
+
+            <li><a href="/shop">ÙØ±ÙˆØ´Ú¯Ø§Ù‡</a></li>
+
+            <li><a href="/shop">ÙØ±ÙˆØ´Ú¯Ø§Ù‡</a></li>
+
+            <li><a href="/#categories"></a> Ø¯Ø³ØªÙ‡â€ŒØ¨Ù†Ø¯ÛŒ</a></li>
+
+            <li><a href="/about">Ø¯Ø±Ø¨Ø§Ø±Ù‡ Ù…Ø§</a></li>
+
+            <li><a href="/#contact">ØªÙ…Ø§Ø³</a></li>
+
+        </ul>
+
+        <form class="search-box" action="/" method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Ø¬Ø³ØªØ¬ÙˆÛŒ Ù…Ø­ØµÙˆÙ„Ø§Øª..."
+                value="{{ search if search else '' }}"
+            >
+
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </form>
+
+        <div class="icons">
+
+            <i class="fa-solid fa-cart-shopping"></i>
+
+        </div>
+
+    <a href="{{ url_for('track_order') }}">
+    پیگیری سفارش
+</a>
+</nav>
+
+</header>
+
+
+
+
+
+
+
+
