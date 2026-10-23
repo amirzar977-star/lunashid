@@ -1,0 +1,104 @@
+# Base44 sandbox environment (development).
+#
+#   web  -> Horizon Properties real-estate site (preview entry point, host port 3000)
+#   shop -> the repository's original Flask store app (host port 5001)
+#
+# Both run FROM THE CLONED SOURCE (bind mount + Flask dev server with reload), so
+# edits show up without rebuilding. Dependencies come from Dockerfile.base44.
+name: app
+
+x-flask-dev: &flask-dev
+  image: base44-python-dev:latest
+  build:
+    context: "${BASE44_PROJECT_ROOT}"
+    dockerfile: "Dockerfile.base44"
+  working_dir: /workspace
+  volumes:
+    - "${BASE44_PROJECT_ROOT}:/workspace"
+  environment:
+    # Platform-supplied sandbox flag (bare entry: value comes from the host env).
+    - BASE44_PREVIEW_MODE
+    - BASE44_PUBLIC_HOST_SUFFIX
+    - BASE44_SANDBOX_HOST_DOMAIN
+    - PYTHONUNBUFFERED=1
+
+services:
+  web:
+    <<: *flask-dev
+    command:
+      - python
+      - -m
+      - flask
+      - --app
+      - horizon_app:app
+      - run
+      - --debug
+      - --host
+      - 0.0.0.0
+      - --port
+      - "3000"
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    labels:
+      base44.project: "Horizon Properties"
+      base44.kind: "web"
+      base44.port: "3000"
+    healthcheck:
+      # Probe real page responses from both public routes of the site.
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request
+          for url in ("http://127.0.0.1:3000/", "http://127.0.0.1:3000/properties"):
+              try:
+                  if urllib.request.urlopen(url, timeout=5).status != 200:
+                      print("unhealthy:", url); sys.exit(1)
+              except Exception as exc:
+                  print("unhealthy:", url, exc); sys.exit(1)
+          print("ok")
+      interval: 15s
+      timeout: 10s
+      retries: 6
+      start_period: 20s
+
+  shop:
+    <<: *flask-dev
+    command:
+      - python
+      - -m
+      - flask
+      - --app
+      - app
+      - run
+      - --debug
+      - --host
+      - 0.0.0.0
+      - --port
+      - "5001"
+    ports:
+      - "5001:5001"
+    restart: on-failure
+    labels:
+      base44.project: "Lunashid (original app)"
+      base44.kind: "web"
+      base44.port: "5001"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request
+          try:
+              if urllib.request.urlopen("http://127.0.0.1:5001/", timeout=5).status != 200:
+                  sys.exit(1)
+          except Exception as exc:
+              print("unhealthy:", exc); sys.exit(1)
+          print("ok")
+      interval: 20s
+      timeout: 10s
+      retries: 6
+      start_period: 25s

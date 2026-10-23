@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/team_card.html" import team_card %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-about{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">About us</p>
+    <h1 class="page-title">A boutique brokerage for considered homes</h1>
+    <p class="page-sub">Founded in Austin in 2007, Horizon Properties advises on a small number of exceptional homes each year — and on the investments behind them.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container about-grid">
+    <div class="about-copy reveal">
+      <p class="eyebrow">Who We Are</p>
+      <h2 class="section-title">Architecture first, evidence always</h2>
+      <p class="section-text">At Horizon Properties, we connect people with extraordinary homes and smart investments. Integrity, transparency, and client satisfaction are at the heart of everything we do.</p>
+      <p class="section-text">Our advisors are specialists rather than generalists. Each works within a handful of neighbourhoods, so advice comes from first-hand knowledge of the streets, the buildings and the buyers who want them.</p>
+      <div class="about-actions">
+        <a class="btn btn--primary" href="{{ url_for('site.properties') }}">Browse properties {{ svg('arrow-right') }}</a>
+        <a class="btn btn--outline" href="{{ url_for('site.contact') }}">Talk to an advisor</a>
+      </div>
+    </div>
+    <div class="about-media reveal" style="--delay: 120ms">
+      <figure class="about-media-main">
+        <img src="{{ url_for('static', filename=about_images.main) }}"
+             alt="A modern residence with a pool terrace and palm planting"
+             width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <figure class="about-media-side">
+        <img src="{{ url_for('static', filename=about_images.side) }}"
+             alt="Detail of a stone and glass facade"
+             width="900" height="1200" loading="lazy" decoding="async">
+      </figure>
+      <a class="circle-cta" href="{{ url_for('site.team') }}" aria-label="Meet the Horizon Properties team">
+        {{ svg('arrow-right') }}
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--mist">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Principles</p>
+        <h2 class="section-title">What we hold to</h2>
+      </div>
+      <p class="section-lead">Four commitments that shape every instruction we accept.</p>
+    </div>
+    <ul class="value-grid value-grid--light">
+      {% for v in values %}
+        <li class="value-item reveal" style="--delay: {{ loop.index0 * 70 }}ms">
+          <h3 class="value-title">{{ v.title }}</h3>
+          <p class="value-text">{{ v.text }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section band-dark">
+  <div class="container">
+    <div class="band-head band-head--split">
+      <div>
+        <p class="eyebrow eyebrow--gold">Track record</p>
+        <h2 class="section-title section-title--light">Eighteen years, one market at a time</h2>
+      </div>
+      <p class="section-lead section-lead--light">Since 2007 we have advised on more than $2.4B of residential sales, and every one of those instructions started with a conversation rather than a listing appointment.</p>
+    </div>
+    <ul class="stat-row">
+      {% for s in stats %}<li><strong>{{ s.value }}</strong><span>{{ s.label }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Team</p>
+        <h2 class="section-title">The People Behind Horizon</h2>
+      </div>
+      <a class="link-arrow" href="{{ url_for('site.team') }}">Meet the team {{ svg('arrow-right') }}</a>
+    </div>
+    <ul class="team-grid">
+      {% for m in team %}{{ team_card(m) }}{% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ cta_band() }}
+{% endblock %}

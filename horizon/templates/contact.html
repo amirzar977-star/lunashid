@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+
+{% block body_class %}page-contact{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">Contact</p>
+    <h1 class="page-title">Let's talk about your property</h1>
+    <p class="page-sub">Send a note and an advisor will reply within one business day. For anything urgent, call the office directly.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container contact-grid">
+    <div class="contact-form-wrap">
+      {% if sent %}
+        <p class="notice notice--success" role="status">Thank you — your message reached us. An advisor will reply within one business day.</p>
+      {% endif %}
+
+      <h2 class="contact-heading">Send us a message</h2>
+      <form class="form form--card" method="post" action="{{ url_for('site.api_contact') }}" data-ajax-form novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="contact-name">Full name</label>
+            <input id="contact-name" type="text" name="name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="contact-email">Email</label>
+            <input id="contact-email" type="email" name="email" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="contact-phone">Phone <span class="field-optional">(optional)</span></label>
+            <input id="contact-phone" type="tel" name="phone" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="contact-interest">How can we help?</label>
+            <select id="contact-interest" name="interest">
+              <option value="Buying a home">Buying a home</option>
+              <option value="Selling a home">Selling a home</option>
+              <option value="Investment advice">Investment advice</option>
+              <option value="Valuation">Valuation</option>
+              <option value="Relocation">Relocation</option>
+              <option value="General enquiry">General enquiry</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="6" required
+                    placeholder="Tell us about the property, the area, or the brief you have in mind."></textarea>
+        </div>
+
+        <p class="form-error" data-form-error role="alert" hidden></p>
+        <button class="btn btn--primary btn--lg" type="submit" data-submit>Send message {{ svg('arrow-right') }}</button>
+        <p class="form-note" data-form-note aria-live="polite"></p>
+        <p class="form-fineprint">We use your details only to answer this enquiry. No mailing lists, no third parties.</p>
+      </form>
+    </div>
+
+    <aside class="contact-aside">
+      <div class="contact-card">
+        <h2 class="contact-heading">Office</h2>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-label">{{ svg('pin') }}<span>Address</span></span>
+            <span class="contact-value">{{ site.address_lines|join(', ') }}</span>
+          </li>
+          <li>
+            <span class="contact-label">{{ svg('phone') }}<span>Phone</span></span>
+            <a class="contact-value" href="tel:{{ site.phone_href }}">{{ site.phone }}</a>
+          </li>
+          <li>
+            <span class="contact-label">{{ svg('mail') }}<span>Email</span></span>
+            <a class="contact-value" href="mailto:{{ site.email }}">{{ site.email }}</a>
+          </li>
+          <li>
+            <span class="contact-label">{{ svg('clock') }}<span>Hours</span></span>
+            <span class="contact-value">{{ site.hours }}</span>
+          </li>
+        </ul>
+        <p class="contact-note">Viewings are by appointment. Off-market instructions are discussed in person only.</p>
+      </div>
+
+      <div class="contact-card contact-card--muted">
+        <h2 class="contact-heading">Looking for something specific?</h2>
+        <p class="contact-note">Tell us the brief — area, budget, and what matters — and we will search quietly on your behalf, including properties that are not publicly listed.</p>
+        <a class="btn btn--outline" href="{{ url_for('site.properties') }}">Browse the portfolio {{ svg('arrow-right') }}</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

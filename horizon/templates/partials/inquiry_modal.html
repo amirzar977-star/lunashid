@@ -1,0 +1,64 @@
+{% from "partials/icons.html" import svg %}
+{#- One dialog serves every enquiry: schedule a viewing, or contact the listing advisor. -#}
+<dialog class="modal" id="inquiry-modal" data-inquiry-modal aria-labelledby="inquiry-title">
+  <div class="modal-panel">
+    <button class="modal-close" type="button" data-modal-close aria-label="Close dialog">{{ svg('close') }}</button>
+    <p class="eyebrow" data-modal-eyebrow>Enquiry</p>
+    <h2 class="modal-title" id="inquiry-title" data-modal-title>Schedule a viewing</h2>
+    <p class="modal-sub" data-modal-sub>Tell us when suits you and an advisor will confirm by email.</p>
+
+    <form class="form" data-ajax-form data-inquiry-form data-endpoint="{{ url_for('site.api_viewing') }}" novalidate>
+      <input type="hidden" name="property" value="" data-modal-property>
+      <input type="hidden" name="intent" value="viewing" data-modal-intent>
+
+      <p class="form-context" data-modal-context hidden></p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="inquiry-name">Full name</label>
+          <input id="inquiry-name" type="text" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="inquiry-email">Email</label>
+          <input id="inquiry-email" type="email" name="email" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="field-row" data-modal-when>
+        <div class="field">
+          <label for="inquiry-date">Preferred date</label>
+          <input id="inquiry-date" type="date" name="date">
+        </div>
+        <div class="field">
+          <label for="inquiry-time">Preferred time</label>
+          <select id="inquiry-time" name="time">
+            <option value="Morning">Morning</option>
+            <option value="Midday">Midday</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="inquiry-phone">Phone <span class="field-optional">(optional)</span></label>
+        <input id="inquiry-phone" type="tel" name="phone" autocomplete="tel">
+      </div>
+
+      <div class="field">
+        <label for="inquiry-message">Message <span class="field-optional">(optional)</span></label>
+        <textarea id="inquiry-message" name="message" rows="3" placeholder="Anything we should know before we meet?"></textarea>
+      </div>
+
+      <p class="form-error" data-form-error role="alert" hidden></p>
+      <button class="btn btn--primary btn--block btn--lg" type="submit" data-submit>Send request</button>
+      <p class="form-note" data-form-note aria-live="polite"></p>
+    </form>
+
+    <div class="modal-success" data-modal-success hidden>
+      <span class="modal-success-icon" aria-hidden="true">{{ svg('check') }}</span>
+      <p class="modal-success-text" data-modal-success-text></p>
+      <button class="btn btn--outline" type="button" data-modal-close>Close</button>
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,16 @@
+{% from "partials/icons.html" import svg %}
+{#- Closing call to action, reused at the foot of most pages. -#}
+{% macro cta_band(title='Ready to Find Your Perfect Property?', text='Let our experts guide you to the right home or investment.') %}
+<section class="cta-wrap">
+  <div class="container">
+    <div class="cta-band reveal">
+      <span class="cta-icon" aria-hidden="true">{{ svg('key') }}</span>
+      <div class="cta-copy">
+        <h2 class="cta-title">{{ title }}</h2>
+        <p class="cta-text">{{ text }}</p>
+      </div>
+      <a class="btn btn--primary btn--lg" href="{{ url_for('site.contact') }}">Get in Touch {{ svg('arrow-right') }}</a>
+    </div>
+  </div>
+</section>
+{% endmacro %}

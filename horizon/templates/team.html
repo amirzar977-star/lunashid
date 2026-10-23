@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/team_card.html" import team_card %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-team{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">Team</p>
+    <h1 class="page-title">The people who will look after you</h1>
+    <p class="page-sub">Four advisors, each working a small set of markets. You will deal with the same person from first valuation to keys.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <ul class="team-grid team-grid--detailed">
+      {% for m in team %}{{ team_card(m, show_bio=true) }}{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section band-dark">
+  <div class="container">
+    <div class="band-head">
+      <p class="eyebrow eyebrow--gold">By the numbers</p>
+      <h2 class="section-title section-title--light">A team measured by outcomes</h2>
+    </div>
+    <ul class="stat-row">
+      {% for s in stats %}<li><strong>{{ s.value }}</strong><span>{{ s.label }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ cta_band('Want to speak with a particular advisor?', 'Tell us which markets matter to you and we will introduce the right specialist.') }}
+{% endblock %}

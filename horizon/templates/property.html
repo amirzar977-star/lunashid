@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/property_card.html" import property_card %}
+
+{% block body_class %}page-property{% endblock %}
+
+{% block content %}
+<article class="detail">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="{{ url_for('site.home') }}">Home</a></li>
+        <li><a href="{{ url_for('site.properties') }}">Properties</a></li>
+        <li aria-current="page">{{ property.name }}</li>
+      </ol>
+    </nav>
+
+    {% if viewing_sent %}
+      <p class="notice notice--success" role="status">Your viewing request has been received — we will confirm the exact time by email.</p>
+    {% endif %}
+
+    <header class="detail-head">
+      <div class="detail-head-main">
+        <p class="badge-row">
+          <span class="badge badge--gold">{{ property.status }}</span>
+          <span class="badge">{{ property.type }}</span>
+        </p>
+        <h1 class="detail-title">{{ property.name }}</h1>
+        <p class="detail-location">{{ svg('pin') }}<span>{{ property.neighbourhood }}, {{ property.city }}, {{ property.region }}, {{ property.country }}</span></p>
+      </div>
+      <p class="detail-price">
+        <span class="detail-price-label">Asking price</span>
+        <strong class="detail-price-value">{{ property.price_label }}</strong>
+      </p>
+    </header>
+
+    <div class="gallery" data-gallery>
+      <div class="gallery-stage">
+        <img data-gallery-main src="{{ url_for('static', filename=property.images[0]) }}"
+             alt="{{ property.name }} — photograph 1 of {{ property.images|length }}"
+             width="1400" height="933" decoding="async">
+        <button class="gallery-open" type="button" data-gallery-open>
+          {{ svg('expand') }}<span>View all photos</span>
+        </button>
+        <p class="gallery-count" data-gallery-count>{{ property.images|length }} photos</p>
+      </div>
+
+      <div class="gallery-thumbs" role="group" aria-label="Property photography">
+        {% for img in property.images %}
+          <button class="gallery-thumb{% if loop.first %} is-active{% endif %}" type="button" data-gallery-thumb
+                  data-src="{{ url_for('static', filename=img) }}"
+                  data-alt="{{ property.name }} — photograph {{ loop.index }} of {{ property.images|length }}"
+                  aria-label="Show photograph {{ loop.index }}"{% if loop.first %} aria-current="true"{% endif %}>
+            <img src="{{ url_for('static', filename=img) }}" alt="" width="1400" height="933" loading="lazy" decoding="async">
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-main">
+        <ul class="fact-strip">
+          <li><span class="fact-icon">{{ svg('bed') }}</span><strong>{{ property.beds }}</strong><span>Bedrooms</span></li>
+          <li><span class="fact-icon">{{ svg('bath') }}</span><strong>{{ property.baths }}</strong><span>Bathrooms</span></li>
+          <li><span class="fact-icon">{{ svg('area') }}</span><strong>{{ '{:,}'.format(property.sqft) }}</strong><span>Square feet</span></li>
+          <li><span class="fact-icon">{{ svg('area') }}</span><strong>{{ property.lot }}</strong><span>Plot</span></li>
+          <li><span class="fact-icon">{{ svg('calendar') }}</span><strong>{{ property.year }}</strong><span>Built</span></li>
+          <li><span class="fact-icon">{{ svg('key') }}</span><strong>{{ property.garage }}</strong><span>Garage spaces</span></li>
+        </ul>
+
+        <section class="detail-section">
+          <h2 class="detail-section-title">About this property</h2>
+          {% for para in property.description %}<p class="detail-text">{{ para }}</p>{% endfor %}
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-section-title">Key features</h2>
+          <ul class="chip-list">
+            {% for feature in property.features %}<li>{{ feature }}</li>{% endfor %}
+          </ul>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-section-title">Amenities</h2>
+          <ul class="amenity-list">
+            {% for amenity in property.amenities %}
+              <li>{{ svg('check') }}<span>{{ amenity }}</span></li>
+            {% endfor %}
+          </ul>
+        </section>
+      </div>
+
+      <aside class="detail-aside">
+        <div class="agent-card">
+          <img class="agent-photo" src="{{ url_for('static', filename=agent.photo) }}"
+               alt="Portrait of {{ agent.name }}" width="700" height="900" loading="lazy" decoding="async">
+          <p class="agent-eyebrow">Listing advisor</p>
+          <h2 class="agent-name">{{ agent.name }}</h2>
+          <p class="agent-role">{{ agent.role }}</p>
+          <p class="agent-bio">{{ agent.bio }}</p>
+          <ul class="agent-contact">
+            <li><a href="tel:{{ agent.phone.replace(' ', '').replace('(', '').replace(')', '') }}">{{ svg('phone') }}<span>{{ agent.phone }}</span></a></li>
+            <li><a href="mailto:{{ agent.email }}">{{ svg('mail') }}<span>{{ agent.email }}</span></a></li>
+          </ul>
+          <div class="agent-actions">
+            <button class="btn btn--primary btn--block" type="button" data-open-inquiry="viewing"
+                    data-property="{{ property.slug }}" data-property-name="{{ property.name }}">
+              {{ svg('calendar') }}<span>Schedule a viewing</span>
+            </button>
+            <button class="btn btn--outline btn--block" type="button" data-open-inquiry="contact"
+                    data-property="{{ property.slug }}" data-property-name="{{ property.name }}">
+              {{ svg('mail') }}<span>Contact agent</span>
+            </button>
+            <button class="btn btn--ghost btn--block favorite-row" type="button" data-favorite="{{ property.slug }}" aria-pressed="false">
+              {{ svg('heart') }}<span data-favorite-label>Save this property</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    {% if similar %}
+      <section class="similar">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Similar</p>
+            <h2 class="section-title">You may also like</h2>
+          </div>
+          <a class="link-arrow" href="{{ url_for('site.properties') }}">Browse all properties {{ svg('arrow-right') }}</a>
+        </div>
+        <div class="card-grid card-grid--three">
+          {% for p in similar %}{{ property_card(p, show_facts=true) }}{% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  </div>
+
+  <div class="mobile-cta" data-mobile-cta>
+    <p class="mobile-cta-price"><span>Asking price</span><strong>{{ property.price_label }}</strong></p>
+    <button class="btn btn--primary" type="button" data-open-inquiry="viewing"
+            data-property="{{ property.slug }}" data-property-name="{{ property.name }}">Schedule a viewing</button>
+  </div>
+
+  <dialog class="lightbox" data-lightbox aria-label="Property photography viewer">
+    <button class="lightbox-close" type="button" data-lightbox-close aria-label="Close gallery">{{ svg('close') }}</button>
+    <button class="lightbox-nav lightbox-nav--prev" type="button" data-lightbox-prev aria-label="Previous photograph">{{ svg('chevron-left') }}</button>
+    <figure class="lightbox-figure">
+      <img data-lightbox-image src="{{ url_for('static', filename=property.images[0]) }}" alt="{{ property.name }} — photograph 1 of {{ property.images|length }}">
+    </figure>
+    <button class="lightbox-nav lightbox-nav--next" type="button" data-lightbox-next aria-label="Next photograph">{{ svg('chevron-right') }}</button>
+    <p class="lightbox-count" data-lightbox-count>1 / {{ property.images|length }}</p>
+  </dialog>
+</article>
+{% endblock %}

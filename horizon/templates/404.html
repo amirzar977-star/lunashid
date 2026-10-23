@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+
+{% block body_class %}page-404{% endblock %}
+
+{% block content %}
+<section class="section error-page">
+  <div class="container error-inner">
+    <p class="eyebrow eyebrow--gold">404</p>
+    <h1 class="page-title">That page has moved on</h1>
+    <p class="page-sub">The page you were looking for is no longer here. The portfolio is a good place to pick things up again.</p>
+    <div class="empty-actions">
+      <a class="btn btn--primary" href="{{ url_for('site.properties') }}">Browse properties {{ svg('arrow-right') }}</a>
+      <a class="btn btn--outline" href="{{ url_for('site.home') }}">Back to home</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

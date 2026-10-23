@@ -1,0 +1,51 @@
+{% from "partials/icons.html" import svg %}
+{% set on_home = request.endpoint == 'site.home' %}
+<header class="site-header{% if not on_home %} site-header--solid{% endif %}" data-header>
+  <div class="container header-inner">
+    <a class="brand" href="{{ url_for('site.home') }}" aria-label="{{ site.name }} — home">
+      <span class="brand-mark">{{ svg('mark') }}</span>
+      <span class="brand-name">Horizon<em>Properties</em></span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        {% for label, href in nav %}
+          {% set active = (href == '/' and request.path == '/') or (href != '/' and request.path.startswith(href)) %}
+          <li>
+            <a class="nav-link{% if active %} is-active{% endif %}" href="{{ href }}"{% if active %} aria-current="page"{% endif %}>{{ label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="header-tools">
+      <a class="saved-link" href="{{ url_for('site.saved') }}" aria-label="Saved properties">
+        {{ svg('heart') }}
+        <span class="saved-count" data-saved-count hidden>0</span>
+      </a>
+      <a class="btn btn--outline header-phone" href="tel:{{ site.phone_href }}">
+        {{ svg('phone') }}<span>{{ site.phone }}</span>
+      </a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav aria-hidden="true">
+    <nav aria-label="Mobile">
+      <ul class="mobile-nav-list">
+        {% for label, href in nav %}
+          {% set active = (href == '/' and request.path == '/') or (href != '/' and request.path.startswith(href)) %}
+          <li style="--i: {{ loop.index0 }}">
+            <a class="mobile-nav-link{% if active %} is-active{% endif %}" href="{{ href }}"{% if active %} aria-current="page"{% endif %}>{{ label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="mobile-nav-foot">
+      <a class="btn btn--primary btn--block" href="tel:{{ site.phone_href }}">{{ svg('phone') }}<span>{{ site.phone }}</span></a>
+      <a class="mobile-nav-mail" href="mailto:{{ site.email }}">{{ site.email }}</a>
+    </div>
+  </div>
+</header>

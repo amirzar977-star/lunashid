@@ -1,0 +1,59 @@
+{% from "partials/icons.html" import svg %}
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand brand--footer" href="{{ url_for('site.home') }}">
+        <span class="brand-mark" aria-hidden="true">{{ svg('mark') }}</span>
+        <span class="brand-name">Horizon<em>Properties</em></span>
+      </a>
+      <p class="footer-text">{{ site.description }}</p>
+      <ul class="social-list">
+        {% for item in site.social %}
+          <li>
+            <a href="{{ item.href }}" rel="noopener noreferrer" target="_blank" aria-label="{{ site.name }} on {{ item.name }}">
+              {{ svg(item.icon) }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <nav class="footer-col" aria-label="Footer">
+      <h2 class="footer-title">Explore</h2>
+      <ul class="footer-links">
+        {% for label, href in nav %}
+          <li><a href="{{ href }}">{{ label }}</a></li>
+        {% endfor %}
+        <li><a href="{{ url_for('site.saved') }}">Saved properties</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer-col">
+      <h2 class="footer-title">Contact</h2>
+      <ul class="footer-contact">
+        <li><a href="tel:{{ site.phone_href }}">{{ site.phone }}</a></li>
+        <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+        <li>{% for line in site.address_lines %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</li>
+        <li class="footer-hours">{{ site.hours }}</li>
+      </ul>
+    </div>
+
+    <div class="footer-col footer-news">
+      <h2 class="footer-title">Newsletter</h2>
+      <p class="footer-text">New listings, private previews and market notes — once a month.</p>
+      <form class="newsletter-form" data-ajax-form data-endpoint="{{ url_for('site.api_subscribe') }}" novalidate>
+        <label class="sr-only" for="newsletter-email">Email address</label>
+        <div class="newsletter-row">
+          <input id="newsletter-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          <button class="btn btn--primary btn--icon" type="submit" aria-label="Subscribe to the newsletter">{{ svg('arrow-right') }}</button>
+        </div>
+        <p class="form-note" data-form-note aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© {{ 2026 }} {{ site.name }}. All rights reserved.</p>
+    <p class="footer-licence">{{ site.licence }}</p>
+  </div>
+</footer>

@@ -1,0 +1,37 @@
+{% from "partials/icons.html" import svg %}
+{#- Reusable property card. `size` in {'', 'large'}; `show_facts` adds the beds/baths/area strip used in grids. -#}
+{% macro property_card(p, size='', show_facts=false) %}
+<article class="property-card{% if size %} property-card--{{ size }}{% endif %}" data-slug="{{ p.slug }}" data-card>
+  <div class="property-card-media">
+    <a class="property-card-link" href="{{ url_for('site.property_detail', slug=p.slug) }}">
+      <img src="{{ url_for('static', filename=p.images[0]) }}"
+           alt="{{ p.name }} — {{ p.city }}, {{ p.region }}"
+           width="1400" height="933" loading="lazy" decoding="async">
+      <span class="property-card-shade" aria-hidden="true"></span>
+      <span class="property-badge">{{ p.type }}</span>
+      {% if p.status != 'For Sale' %}
+        <span class="property-badge property-badge--status">{{ p.status }}</span>
+      {% endif %}
+      <span class="property-card-overlay">
+        <span class="property-card-meta">
+          <span class="property-card-name">{{ p.name }}</span>
+          <span class="property-card-loc">{{ svg('pin') }}<span>{{ p.city }}, {{ p.region }}, {{ p.country }}</span></span>
+        </span>
+        <span class="property-card-price">{{ p.price_label }}</span>
+      </span>
+    </a>
+    <button class="favorite-btn" type="button" data-favorite="{{ p.slug }}"
+            aria-pressed="false" aria-label="Save {{ p.name }}">
+      {{ svg('heart') }}
+    </button>
+  </div>
+
+  {% if show_facts %}
+    <ul class="property-facts">
+      <li>{{ svg('bed') }}<span>{{ p.beds }} bd</span></li>
+      <li>{{ svg('bath') }}<span>{{ p.baths }} ba</span></li>
+      <li>{{ svg('area') }}<span>{{ '{:,}'.format(p.sqft) }} sq ft</span></li>
+    </ul>
+  {% endif %}
+</article>
+{% endmacro %}

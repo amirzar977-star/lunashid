@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/property_card.html" import property_card %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-properties{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">Portfolio</p>
+    <h1 class="page-title">Properties</h1>
+    <p class="page-sub">Architect-designed homes, waterfront residences and prime investment property across the United States.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <form class="filters" method="get" action="{{ url_for('site.properties') }}" data-filters>
+      <div class="filter-bar">
+        <div class="filter-search">
+          <label class="sr-only" for="filter-q">Search properties</label>
+          {{ svg('pin', 'filter-search-icon') }}
+          <input id="filter-q" type="search" name="q" value="{{ filters.q }}"
+                 placeholder="Search by name, city or neighbourhood" data-filter-search>
+        </div>
+        <button class="filters-toggle" type="button" data-filters-toggle aria-expanded="false" aria-controls="filters-panel">
+          <span>Filters</span>
+          <span class="filters-count" data-filters-count {% if not meta.active_filters %}hidden{% endif %}>{{ meta.active_filters }}</span>
+        </button>
+      </div>
+
+      <div class="filters-panel" id="filters-panel" data-filters-panel>
+        <div class="filter-field">
+          <label for="filter-location">Location</label>
+          <select id="filter-location" name="location" data-filter-select>
+            <option value="">Any location</option>
+            {% for loc in locations %}
+              <option value="{{ loc.value }}"{% if filters.location == loc.value %} selected{% endif %}>{{ loc.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="filter-type">Property type</label>
+          <select id="filter-type" name="type" data-filter-select>
+            <option value="">Any type</option>
+            {% for t in types %}
+              <option value="{{ t }}"{% if filters.type == t %} selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="filter-price">Price</label>
+          <select id="filter-price" name="price" data-filter-select>
+            {% for key, label, low, high in price_ranges %}
+              <option value="{{ key }}"{% if filters.price == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="filter-beds">Bedrooms</label>
+          <select id="filter-beds" name="beds" data-filter-select>
+            {% for key, label in bed_options %}
+              <option value="{{ key }}"{% if filters.beds == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="filter-baths">Bathrooms</label>
+          <select id="filter-baths" name="baths" data-filter-select>
+            {% for key, label in bath_options %}
+              <option value="{{ key }}"{% if filters.baths == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label for="filter-sort">Sort by</label>
+          <select id="filter-sort" name="sort" data-filter-select>
+            {% for key, label in sort_options %}
+              <option value="{{ key }}"{% if filters.sort == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-actions">
+          <a class="btn btn--outline btn--sm" href="{{ url_for('site.properties') }}">Reset</a>
+          <button class="btn btn--primary btn--sm" type="submit">Apply</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="results-count" data-results-count aria-live="polite">
+      {{ meta.count }} propert{{ 'y' if meta.count == 1 else 'ies' }}{% if meta.active_filters %} · {{ meta.active_filters }} filter{{ 's' if meta.active_filters > 1 }} applied{% endif %}
+    </p>
+
+    {% if properties %}
+      <div class="card-grid" data-card-grid>
+        {% for p in properties %}{{ property_card(p, show_facts=true) }}{% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h2 class="empty-title">No properties match those filters</h2>
+        <p class="empty-text">Try widening the price range or clearing the location filter — or tell us what you are looking for and we will search off-market for you.</p>
+        <div class="empty-actions">
+          <a class="btn btn--primary" href="{{ url_for('site.properties') }}">Clear filters</a>
+          <a class="btn btn--outline" href="{{ url_for('site.contact') }}">Contact an advisor</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{{ cta_band('Not seeing the right property?', 'Tell us what you are looking for — much of our work is off-market.') }}
+{% endblock %}

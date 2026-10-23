@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-services{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">Services</p>
+    <h1 class="page-title">Six services, one senior team</h1>
+    <p class="page-sub">Whether you are selling an architect-designed home or building a portfolio, the work starts with the same thing: a clear view of what the property is worth and who will buy it.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <ol class="process-strip">
+      <li class="reveal"><span class="process-index">01</span><h2 class="process-title">Appraisal &amp; strategy</h2><p class="process-text">A written valuation built on comparable sales and current demand, plus a plan for how the property reaches the market.</p></li>
+      <li class="reveal" style="--delay: 80ms"><span class="process-index">02</span><h2 class="process-title">Presentation &amp; search</h2><p class="process-text">Photography, film and campaign design — or, for buyers, a curated shortlist of on- and off-market homes.</p></li>
+      <li class="reveal" style="--delay: 160ms"><span class="process-index">03</span><h2 class="process-title">Negotiation &amp; closing</h2><p class="process-text">One advisor negotiates and manages every party through to completion, including legal and finance coordination.</p></li>
+    </ol>
+  </div>
+</section>
+
+{% for s in services %}
+  <section class="service-row{% if loop.index is even %} service-row--flip{% endif %}" id="{{ s.slug }}">
+    <div class="container service-row-inner">
+      <figure class="service-row-media reveal">
+        <img src="{{ url_for('static', filename=s.image) }}" alt="{{ s.title }} — Horizon Properties"
+             width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <div class="service-row-copy reveal" style="--delay: 100ms">
+        <p class="eyebrow">Service {{ '%02d' % loop.index }}</p>
+        <h2 class="section-title">{{ s.title }}</h2>
+        <p class="section-text">{{ s.summary }}</p>
+        <ul class="point-list">
+          {% for point in s.points %}<li>{{ svg('check') }}<span>{{ point }}</span></li>{% endfor %}
+        </ul>
+        <a class="btn btn--outline" href="{{ url_for('site.contact') }}">Enquire about {{ s.title|lower }} {{ svg('arrow-right') }}</a>
+      </div>
+    </div>
+  </section>
+{% endfor %}
+
+{{ cta_band('Ready to talk through your property?', 'A first conversation costs nothing and usually changes the plan.') }}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/property_card.html" import property_card %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-saved{% endblock %}
+
+{% block content %}
+<section class="page-band">
+  <div class="container">
+    <p class="eyebrow eyebrow--gold">Your shortlist</p>
+    <h1 class="page-title">Saved properties</h1>
+    <p class="page-sub" data-saved-summary>Properties you have saved while browsing. They stay on this device — no account needed.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="empty-state" data-saved-empty hidden>
+      <h2 class="empty-title">Nothing saved yet</h2>
+      <p class="empty-text">Tap the heart on any property to keep it here while you compare. Your shortlist stays on this device.</p>
+      <div class="empty-actions">
+        <a class="btn btn--primary" href="{{ url_for('site.properties') }}">Browse properties {{ svg('arrow-right') }}</a>
+      </div>
+    </div>
+
+    <div class="card-grid" data-saved-grid hidden>
+      {% for p in properties %}{{ property_card(p, show_facts=true) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band('Ready to see one of these in person?', 'Pick a time that suits you and an advisor will meet you there.') }}
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% from "partials/icons.html" import svg %}
+{% from "partials/property_card.html" import property_card %}
+{% from "partials/team_card.html" import team_card %}
+{% from "partials/cta.html" import cta_band %}
+
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+{#- 1. Hero -#}
+<section class="hero" data-hero>
+  <div class="hero-media">
+    <img src="{{ url_for('static', filename=hero.src) }}" alt="{{ hero.alt }}"
+         width="2200" height="1238" fetchpriority="high" decoding="async">
+  </div>
+  <span class="hero-scrim" aria-hidden="true"></span>
+  <div class="container hero-inner">
+    <h1 class="hero-title">Discover Exceptional<br>Homes &amp; Investments</h1>
+    <p class="hero-text">Premium properties in prime locations. Find your dream home or the perfect investment with confidence.</p>
+  </div>
+  <a class="hero-cue" href="#who-we-are">
+    <span class="hero-cue-label">Explore</span>
+    <span class="hero-cue-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+{#- 2. Who we are -#}
+<section class="section about-preview" id="who-we-are">
+  <div class="container about-grid">
+    <div class="about-copy reveal">
+      <p class="eyebrow">About Us</p>
+      <h2 class="section-title">Who We Are</h2>
+      <p class="section-text">At Horizon Properties, we connect people with extraordinary homes and smart investments. Integrity, transparency, and client satisfaction are at the heart of everything we do.</p>
+      <a class="btn btn--primary" href="{{ url_for('site.about') }}">Learn More {{ svg('arrow-right') }}</a>
+    </div>
+    <div class="about-media reveal" style="--delay: 120ms">
+      <figure class="about-media-main">
+        <img src="{{ url_for('static', filename=about_images.main) }}"
+             alt="A modern residence with a pool terrace and palm planting"
+             width="1400" height="933" loading="lazy" decoding="async">
+      </figure>
+      <figure class="about-media-side">
+        <img src="{{ url_for('static', filename=about_images.side) }}"
+             alt="Detail of a stone and glass facade"
+             width="900" height="1200" loading="lazy" decoding="async">
+      </figure>
+      <a class="circle-cta" href="{{ url_for('site.about') }}" aria-label="More about Horizon Properties">
+        {{ svg('arrow-right') }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{#- 3. Featured properties -#}
+<section class="section section--mist" id="featured-properties">
+  <div class="container section-head">
+    <div>
+      <p class="eyebrow">Featured</p>
+      <h2 class="section-title">Featured Properties</h2>
+    </div>
+    <a class="link-arrow" href="{{ url_for('site.properties') }}">View all properties {{ svg('arrow-right') }}</a>
+  </div>
+
+  <div class="carousel" data-carousel>
+    <div class="carousel-track" data-carousel-track tabindex="0" role="group" aria-label="Featured properties — scroll horizontally">
+      {% for p in featured %}{{ property_card(p, size='large' if loop.first else '') }}{% endfor %}
+    </div>
+    <button class="carousel-btn carousel-btn--prev" type="button" data-carousel-prev aria-label="Previous properties">{{ svg('chevron-left') }}</button>
+    <button class="carousel-btn carousel-btn--next" type="button" data-carousel-next aria-label="Next properties">{{ svg('chevron-right') }}</button>
+  </div>
+</section>
+
+{#- 4. Services -#}
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Services</p>
+        <h2 class="section-title">How We Help</h2>
+      </div>
+      <p class="section-lead">Six focused services, delivered by one senior team that knows these markets street by street.</p>
+    </div>
+
+    <ul class="service-list">
+      {% for s in services %}
+        <li class="service-item reveal" style="--delay: {{ loop.index0 * 60 }}ms">
+          <a href="{{ url_for('site.services') }}#{{ s.slug }}">
+            <span class="service-index">{{ '%02d' % loop.index }}</span>
+            <span class="service-body">
+              <span class="service-title">{{ s.title }}</span>
+              <span class="service-text">{{ s.summary }}</span>
+            </span>
+            <span class="service-arrow" aria-hidden="true">{{ svg('arrow-right') }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{#- 5. Why choose Horizon -#}
+<section class="section band-dark" id="why-horizon">
+  <div class="container">
+    <div class="band-head">
+      <p class="eyebrow eyebrow--gold">Why Horizon</p>
+      <h2 class="section-title section-title--light">A brokerage built around the building</h2>
+      <p class="section-lead section-lead--light">We advise on architecture we admire, in markets we know, with the evidence to back it up.</p>
+    </div>
+
+    <ul class="value-grid">
+      {% for v in values %}
+        <li class="value-item reveal" style="--delay: {{ loop.index0 * 70 }}ms">
+          <h3 class="value-title">{{ v.title }}</h3>
+          <p class="value-text">{{ v.text }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <ul class="stat-row">
+      {% for s in stats %}
+        <li><strong>{{ s.value }}</strong><span>{{ s.label }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{#- 6. Team -#}
+<section class="section" id="team">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Team</p>
+        <h2 class="section-title">The People Behind Horizon</h2>
+      </div>
+      <a class="link-arrow" href="{{ url_for('site.team') }}">Meet the team {{ svg('arrow-right') }}</a>
+    </div>
+
+    <ul class="team-grid">
+      {% for m in team %}{{ team_card(m) }}{% endfor %}
+    </ul>
+  </div>
+</section>
+
+{#- 7. Call to action -#}
+{{ cta_band() }}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% from "partials/icons.html" import svg %}
+{% macro team_card(m, show_bio=false) %}
+<li class="team-card reveal">
+  <div class="team-card-media">
+    <img src="{{ url_for('static', filename=m.photo) }}" alt="Portrait of {{ m.name }}, {{ m.role }}"
+         width="700" height="900" loading="lazy" decoding="async">
+  </div>
+  <div class="team-card-body">
+    <h3 class="team-card-name">{{ m.name }}</h3>
+    <p class="team-card-role">{{ m.role }}</p>
+    {% if show_bio %}<p class="team-card-bio">{{ m.bio }}</p>{% endif %}
+    <ul class="team-card-links">
+      <li><a href="mailto:{{ m.email }}" aria-label="Email {{ m.name }}">{{ svg('mail') }}</a></li>
+      <li><a href="tel:{{ m.phone.replace(' ', '').replace('(', '').replace(')', '') }}" aria-label="Call {{ m.name }}">{{ svg('phone') }}</a></li>
+      <li><a href="{{ m.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="{{ m.name }} on LinkedIn">{{ svg('linkedin') }}</a></li>
+    </ul>
+  </div>
+</li>
+{% endmacro %}
